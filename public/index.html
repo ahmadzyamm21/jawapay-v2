@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jawa Pay - Platform Agen Pulsa & Paket Data Premium</title>
+    <link rel="stylesheet" href="./style.css">
+    
+    <!-- PWA & Mobile Meta Tags -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Jawa Pay">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    <meta name="theme-color" content="#0d0e15">
+
+    <!-- Lucide Icons for premium iconography -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Midtrans Snap JS will be loaded dynamically based on server config -->
+</head>
+<body>
+
+    <!-- Landing / Promotional Section -->
+    <div id="landing-container">
+        <!-- Landing Header -->
+        <header class="app-container" style="border-bottom: 1px solid var(--card-border); margin-bottom: 0; padding: 20px 16px;">
+            <div class="brand">
+                <img src="logo.png" class="brand-icon" alt="Logo" style="object-fit: cover; background: transparent;">
+                <div>
+                    <h1 class="brand-name">Jawa Pay</h1>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-top: -4px;">Keagenan Pulsa & Tagihan Premium</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <nav class="desktop-nav" style="display: flex; gap: 24px; font-size: 14px; font-weight: 500;">
+                    <a href="#features" style="color: var(--text-secondary); text-decoration: none; transition: var(--transition-smooth);">Fitur</a>
+                    <a href="#prices" style="color: var(--text-secondary); text-decoration: none; transition: var(--transition-smooth);">Daftar Harga</a>
+                    <a href="#how-it-works" style="color: var(--text-secondary); text-decoration: none; transition: var(--transition-smooth);">Cara Mulai</a>
+                </nav>
+                <button class="btn-topup" id="btn-go-to-login" style="padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; background: var(--primary-gradient); border: none; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
+                    <i data-lucide="log-in" style="width: 15px; height: 15px; margin-right: 6px;"></i> Masuk Agen
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="landing-hero app-container" style="padding: 60px 16px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;">
+            <div>
+                <span style="background: rgba(99, 102, 241, 0.15); color: #c084fc; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">🇮🇩 Agen Pulsa & PPOB Terpercaya</span>
+                <h2 style="font-size: 42px; font-weight: 800; line-height: 1.2; margin-top: 16px; letter-spacing: -1px;">
+                    Aplikasi Agen Pulsa, Paket Data & PPOB Termurah di <span style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Jawa Pay</span>
+                </h2>
+                <p style="color: var(--text-secondary); margin-top: 16px; font-size: 15px; line-height: 1.6;">
+                    Mulai bisnis konter pulsa dan loket tagihan PPOB dengan harga modal server tangan pertama. Transaksi otomatis 24 jam nonstop, tanpa biaya pendaftaran (gratis), dan top-up saldo via QRIS instan!
+                </p>
+                <div style="display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap;">
+                    <button class="btn-action" id="btn-hero-register" style="max-width: 220px; height: 48px; border-radius: 12px; background: var(--primary-gradient); box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);">
+                        <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i> Daftar Jadi Agen
+                    </button>
+                    <a href="#prices" class="tab-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center; padding: 0 24px; border-radius: 12px; border: 1px solid var(--card-border); color: var(--text-primary); font-size: 13px; font-weight: 600; background: rgba(255, 255, 255, 0.03); transition: var(--transition-smooth);">
+                        <i data-lucide="tag" style="width: 16px; height: 16px; margin-right: 8px;"></i> Cek Harga Modal
+                    </a>
+                </div>
+            </div>
+            <div style="position: relative; display: flex; justify-content: center;">
+                <div style="position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%); top: -50px; z-index: 1;"></div>
+                <img src="jawapay_hero.png" alt="Jawa Pay Mockup" style="width: 100%; max-width: 440px; border-radius: 24px; border: 1px solid var(--card-border); box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 2; transform: perspective(800px) rotateY(-10deg) rotateX(5deg);">
+            </div>
+        </section>
+
+        <!-- Indonesian Operators & Brands Grid -->
+        <section class="app-container" style="padding: 10px 16px 40px; text-align: center; border-bottom: 1px solid var(--card-border);">
+            <p style="color: var(--text-secondary); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">Mendukung Operator Seluler & E-Money Resmi Indonesia</p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; align-items: center;">
+                <div class="op-logo-badge telkomsel">Telkomsel</div>
+                <div class="op-logo-badge indosat">Indosat Ooredoo</div>
+                <div class="op-logo-badge xl">XL Axiata</div>
+                <div class="op-logo-badge axis">Axis</div>
+                <div class="op-logo-badge tri">Tri (3)</div>
+                <div class="op-logo-badge smartfren">Smartfren</div>
+                <div class="op-logo-badge pln">Token PLN</div>
+                <div class="op-logo-badge gopay">GoPay</div>
+                <div class="op-logo-badge dana">DANA</div>
+                <div class="op-logo-badge ovo">OVO</div>
+                <div class="op-logo-badge shopeepay">ShopeePay</div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section id="features" class="app-container" style="padding: 40px 16px;">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <span style="color: var(--primary); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Keunggulan Layanan</span>
+                <h3 style="font-size: 28px; font-weight: 800; margin-top: 8px; letter-spacing: -0.5px;">Kenapa Memilih Jawa Pay?</h3>
+            </div>
+            <div class="landing-features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div class="glass-card" style="padding: 24px; border-radius: 20px; transition: var(--transition-smooth);">
+                    <div style="width: 48px; height: 48px; background: rgba(99, 102, 241, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary); margin-bottom: 20px;">
+                        <i data-lucide="zap" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">Transaksi Instan 24/7</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">Proses pengisian pulsa dan data super kilat dalam hitungan detik secara otomatis langsung dari server pusat.</p>
+                </div>
+                <div class="glass-card" style="padding: 24px; border-radius: 20px; transition: var(--transition-smooth);">
+                    <div style="width: 48px; height: 48px; background: rgba(6, 182, 212, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #06b6d4; margin-bottom: 20px;">
+                        <i data-lucide="qr-code" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">Metode Pembayaran Instan</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">Top-up saldo otomatis menggunakan QRIS Snap (GoPay, OVO, Dana, LinkAja) & Transfer Virtual Account.</p>
+                </div>
+                <div class="glass-card" style="padding: 24px; border-radius: 20px; transition: var(--transition-smooth);">
+                    <div style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #10b981; margin-bottom: 20px;">
+                        <i data-lucide="trending-up" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">Harga Distributor Terbaik</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">Mendapatkan harga modal tangan pertama termurah sehingga Anda bisa meraup keuntungan penjualan maksimal.</p>
+                </div>
+                <div class="glass-card" style="padding: 24px; border-radius: 20px; transition: var(--transition-smooth);">
+                    <div style="width: 48px; height: 48px; background: rgba(245, 158, 11, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #f59e0b; margin-bottom: 20px;">
+                        <i data-lucide="printer" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">Cetak Struk Thermal</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">Dilengkapi modul cetak struk penjualan profesional dengan penyesuaian nama toko & ukuran printer thermal (58mm/80mm).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Prices Section -->
+        <section id="prices" class="app-container" style="padding: 40px 16px;">
+            <div style="text-align: center; margin-bottom: 32px;">
+                <span style="color: var(--primary); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Katalog Produk</span>
+                <h3 style="font-size: 28px; font-weight: 800; margin-top: 8px; letter-spacing: -0.5px;">Daftar Harga Live Agen</h3>
+            </div>
+            
+            <div class="glass-card" style="padding: 28px; border-radius: 24px;">
+                <!-- Category Tab Selector -->
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center;" id="landing-tabs">
+                    <button class="tab-btn active" data-landcat="pulsa" style="padding: 10px 18px; border-radius: 10px;">⚡ Pulsa Seluler</button>
+                    <button class="tab-btn" data-landcat="data" style="padding: 10px 18px; border-radius: 10px;">📱 Paket Data</button>
+                    <button class="tab-btn" data-landcat="aktif" style="padding: 10px 18px; border-radius: 10px;">📅 Masa Aktif</button>
+                    <button class="tab-btn" data-landcat="pln" style="padding: 10px 18px; border-radius: 10px;">🔌 Token PLN</button>
+                    <button class="tab-btn" data-landcat="tv" style="padding: 10px 18px; border-radius: 10px;">📺 Voucher TV</button>
+                </div>
+                
+                <!-- Operator Selector -->
+                <div style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; justify-content: center;" id="landing-operators">
+                    <!-- Dynamic Operator Dots will be rendered here -->
+                </div>
+
+                <!-- Price List Table -->
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--card-border); color: var(--text-secondary); font-weight: 600;">
+                                <th style="padding: 12px;">Produk</th>
+                                <th style="padding: 12px;">SKU</th>
+                                <th style="padding: 12px;">Harga Agen</th>
+                                <th style="padding: 12px; text-align: right;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="landing-price-rows">
+                            <!-- Dynamic price list rows will be loaded here -->
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 24px; color: var(--text-secondary);">
+                                    <div class="loader-spinner" style="margin: 0 auto 10px;"></div> Loading katalog harga...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it works -->
+        <section id="how-it-works" class="app-container" style="padding: 40px 16px; text-align: center;">
+            <div style="margin-bottom: 40px;">
+                <span style="color: var(--primary); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Panduan Keagenan</span>
+                <h3 style="font-size: 28px; font-weight: 800; margin-top: 8px; letter-spacing: -0.5px;">3 Langkah Mudah Memulai</h3>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; margin-top: 20px;">
+                <div style="position: relative;">
+                    <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: white; margin: 0 auto 20px; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);">1</div>
+                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">Daftar Akun Gratis</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 250px; margin: 0 auto;">Buka menu daftar, isikan nama lengkap dan password pilihan Anda secara gratis.</p>
+                </div>
+                <div>
+                    <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--secondary-gradient); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: white; margin: 0 auto 20px; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);">2</div>
+                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">Isi Saldo Agen</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 250px; margin: 0 auto;">Top-up saldo instan menggunakan QRIS otomatis. Saldo bertambah instan.</p>
+                </div>
+                <div>
+                    <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--success-gradient); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: white; margin: 0 auto 20px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">3</div>
+                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">Mulai Jualan</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 250px; margin: 0 auto;">Ketik nomor pembeli, pilih produk, dan dapatkan keuntungan flat langsung.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="app-container" style="padding: 40px 16px;">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <span style="color: var(--primary); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Kisah Sukses</span>
+                <h3 style="font-size: 28px; font-weight: 800; margin-top: 8px; letter-spacing: -0.5px;">Telah Dipercaya Ratusan Agen</h3>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <div class="glass-card" style="padding: 24px; border-radius: 20px;">
+                    <div style="display: flex; gap: 4px; color: #f59e0b; margin-bottom: 12px;">
+                        <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                        <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                        <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                        <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                        <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; font-style: italic; margin-bottom: 20px;">
+                        "Sebelumnya pakai aplikasi lain sering pending. Sejak pakai Jawa Pay transaksi lancar, pulsa masuk kurang dari 5 detik!"
+                    </p>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 38px; height: 38px; border-radius: 50%; background: #c084fc; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">B</div>
+                        <div>
+                            <h5 style="font-size: 13px; font-weight: 700;">Budi Setiawan</h5>
+                            <p style="font-size: 11px; color: var(--text-muted);">Agen Konter - Solo</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card" style="padding: 24px; border-radius: 20px;">
+                    <div style="display: flex; gap: 4px; color: #f59e0b; margin-bottom: 12px;">
+                        <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                        <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                        <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                        <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                        <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; font-style: italic; margin-bottom: 20px;">
+                        "Bisa atur keuntungan flat sendiri itu fitur terbaik. Cetak struknya juga rapi banget untuk langganan token PLN konter saya."
+                    </p>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 38px; height: 38px; border-radius: 50%; background: #60a5fa; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">S</div>
+                        <div>
+                            <h5 style="font-size: 13px; font-weight: 700;">Siti Rahma</h5>
+                            <p style="font-size: 11px; color: var(--text-muted);">Kios Sembako - Yogyakarta</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Indonesian Deposit Methods Grid -->
+        <section class="app-container" style="padding: 40px 16px; text-align: center; border-top: 1px dashed var(--card-border);">
+            <p style="color: var(--text-secondary); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">Metode Deposit Otomatis & Terlengkap</p>
+            <div style="display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; align-items: center; opacity: 0.85;">
+                <div style="font-weight: 800; font-size: 18px; color: #ffffff; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;"><i data-lucide="qr-code" style="color: var(--primary); width: 20px; height: 20px;"></i> QRIS (Semua E-Wallet)</div>
+                <div class="bank-logo-badge bca">BCA</div>
+                <div class="bank-logo-badge mandiri">Mandiri</div>
+                <div class="bank-logo-badge bri">BRI</div>
+                <div class="bank-logo-badge bni">BNI</div>
+            </div>
+        </section>
+
+        <!-- CTA Callout Banner -->
+        <section class="app-container" style="padding: 40px 16px;">
+            <div class="glass-card" style="padding: 48px 32px; border-radius: 28px; text-align: center; background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.2) 0%, rgba(22, 19, 49, 0.6) 100%);">
+                <h3 style="font-size: 32px; font-weight: 800; letter-spacing: -0.5px;">Siap Mengembangkan Usaha Anda?</h3>
+                <p style="color: var(--text-secondary); font-size: 15px; margin-top: 12px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                    Gabung bersama ratusan agen Jawa Pay sekarang juga secara gratis dan raih keuntungan tanpa batas.
+                </p>
+                <button class="btn-action" id="btn-bottom-register" style="max-width: 220px; height: 48px; border-radius: 12px; margin: 32px auto 0; background: var(--primary-gradient); box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);">
+                    <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i> Daftar Sekarang
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-container" style="padding: 40px 16px 20px; border-top: 1px solid var(--card-border); font-size: 13px; color: var(--text-secondary); text-align: center;">
+            <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Jawa Pay - Platform Distributor Pulsa & Tagihan PPOB</p>
+            <p style="margin-bottom: 20px; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Jawa Pay menyediakan layanan agen pulsa elektrik termurah dan terlengkap di Indonesia dengan sistem otomatisasi pembayaran payment gateway terintegrasi & interkoneksi Digiflazz.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;">
+                <a href="#" id="link-faq-land" style="color: var(--primary); text-decoration: none; font-weight: 600;">FAQ</a>
+                <span>•</span>
+                <a href="#" id="link-terms-land" style="color: var(--primary); text-decoration: none; font-weight: 600;">Syarat & Ketentuan</a>
+                <span>•</span>
+                <a href="#" id="link-refund-land" style="color: var(--primary); text-decoration: none; font-weight: 600;">Kebijakan Refund</a>
+                <span>•</span>
+                <a href="#" id="link-privacy-land" style="color: var(--primary); text-decoration: none; font-weight: 600;">Kebijakan Privasi</a>
+                <span>•</span>
+                <a href="#" id="link-contact-land" style="color: var(--primary); text-decoration: none; font-weight: 600;">Hubungi Kami</a>
+            </div>
+            <div style="margin-bottom: 24px; font-size: 11px; color: var(--text-muted); line-height: 1.5; background: rgba(255, 255, 255, 0.02); padding: 12px 20px; border-radius: 12px; border: 1px solid var(--card-border); max-width: 600px; margin-left: auto; margin-right: auto;">
+                <p><strong>Alamat Usaha:</strong> Jalan Kb Anggrek Atas No. 15, RT 01 / RW 02, Tanah Sareal, Bogor, Jawa Barat 16161</p>
+                <p><strong>Kontak:</strong> Email: admin@jawapay.my.id | WhatsApp: +62 823-3470-8033</p>
+            </div>
+            <p style="font-size: 11px; color: var(--text-muted);">&copy; 2026 Jawa Pay. Hak Cipta Dilindungi Undang-Undang.</p>
+        </footer>
+    </div>
+
+    <!-- Auth Section (Login/Register Card) -->
+    <div class="app-container" id="auth-container" style="display: none;">
+        <div class="glass-card" style="max-width: 420px; margin: 80px auto; padding: 32px; border-radius: 28px;">
+            <div style="text-align: center; margin-bottom: 28px;">
+                <img src="logo.png" class="brand-icon" alt="Logo" style="margin: 0 auto 12px; float: none; object-fit: cover; background: transparent;">
+                <h2 class="brand-name">Jawa Pay</h2>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Gerbang Transaksi Pulsa & Data</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form-box">
+                <h3 style="font-size: 18px; margin-bottom: 20px; font-weight: 700; text-align: center; letter-spacing: -0.3px;">Masuk Ke Akun Agen</h3>
+                <div class="input-group">
+                    <label class="input-label" for="login-username">Username</label>
+                    <input type="text" id="login-username" class="input-field" placeholder="Masukkan username" style="font-size: 15px; padding: 12px 16px;" autocomplete="off">
+                </div>
+                <div class="input-group" style="margin-top: -8px;">
+                    <label class="input-label" for="login-password">Password</label>
+                    <input type="password" id="login-password" class="input-field" placeholder="Masukkan password" style="font-size: 15px; padding: 12px 16px;">
+                </div>
+                <button class="btn-action" id="btn-login-submit" style="margin-top: 10px; height: 50px; border-radius: 14px;">
+                    <i data-lucide="log-in" style="width: 18px; height: 18px;"></i>
+                    Masuk Sekarang
+                </button>
+                <p style="font-size: 13px; color: var(--text-secondary); text-align: center; margin-top: 20px;">
+                    Belum punya akun agen? <a href="#" id="link-to-register" style="color: var(--primary); font-weight: 600; text-decoration: none;">Daftar di sini</a>
+                </p>
+                <p style="font-size: 13px; text-align: center; margin-top: 12px;">
+                    <a href="#" class="link-back-to-landing-btn" style="color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 12px; opacity: 0.7; transition: var(--transition-smooth);"><i data-lucide="arrow-left" style="width: 12px; height: 12px; vertical-align: middle; margin-right: 4px; display: inline-block;"></i>Kembali ke Beranda</a>
+                </p>
+            </div>
+
+            <!-- Register Form (Hidden by Default) -->
+            <div id="register-form-box" style="display: none;">
+                <h3 style="font-size: 18px; margin-bottom: 20px; font-weight: 700; text-align: center; letter-spacing: -0.3px;">Daftar Akun Agen</h3>
+                <div class="input-group">
+                    <label class="input-label" for="register-name">Nama Lengkap</label>
+                    <input type="text" id="register-name" class="input-field" placeholder="Contoh: Ahmad Pulsa" style="font-size: 15px; padding: 12px 16px;" autocomplete="off">
+                </div>
+                <div class="input-group" style="margin-top: -8px;">
+                    <label class="input-label" for="register-username">Username</label>
+                    <input type="text" id="register-username" class="input-field" placeholder="Pilih username unik" style="font-size: 15px; padding: 12px 16px;" autocomplete="off">
+                </div>
+                <div class="input-group" style="margin-top: -8px;">
+                    <label class="input-label" for="register-email">Alamat Email</label>
+                    <input type="email" id="register-email" class="input-field" placeholder="Pilih email aktif Anda" style="font-size: 15px; padding: 12px 16px;" autocomplete="off">
+                </div>
+                <div class="input-group" style="margin-top: -8px;">
+                    <label class="input-label" for="register-password">Password</label>
+                    <input type="password" id="register-password" class="input-field" placeholder="Buat password aman" style="font-size: 15px; padding: 12px 16px;">
+                </div>
+                <button class="btn-action" id="btn-register-submit" style="margin-top: 10px; background: var(--secondary-gradient); height: 50px; border-radius: 14px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">
+                    <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i>
+                    Daftar Sekarang
+                </button>
+                <p style="font-size: 13px; color: var(--text-secondary); text-align: center; margin-top: 20px;">
+                    Sudah punya akun? <a href="#" id="link-to-login" style="color: var(--primary); font-weight: 600; text-decoration: none;">Masuk di sini</a>
+                </p>
+                <p style="font-size: 13px; text-align: center; margin-top: 12px;">
+                    <a href="#" class="link-back-to-landing-btn" style="color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 12px; opacity: 0.7; transition: var(--transition-smooth);"><i data-lucide="arrow-left" style="width: 12px; height: 12px; vertical-align: middle; margin-right: 4px; display: inline-block;"></i>Kembali ke Beranda</a>
+                </p>
+            </div>
+
+            <!-- OTP Verification Form Box (Hidden by Default) -->
+            <div id="otp-form-box" style="display: none;">
+                <h3 style="font-size: 18px; margin-bottom: 8px; font-weight: 700; text-align: center; letter-spacing: -0.3px;">Verifikasi Kode OTP 🔒</h3>
+                <p style="font-size: 12px; color: var(--text-secondary); text-align: center; margin-bottom: 20px;" id="otp-email-target-text">
+                    Kode 6-digit telah dikirimkan ke email Anda.
+                </p>
+
+                <div class="input-group">
+                    <label class="input-label" for="otp-code-input" style="text-align: center; display: block;">Masukkan Kode OTP 6-Digit</label>
+                    <input type="text" id="otp-code-input" class="input-field" placeholder="123456" maxlength="6" style="font-size: 24px; font-weight: 800; text-align: center; letter-spacing: 6px; padding: 12px; color: #38bdf8; background: rgba(0,0,0,0.3);" autocomplete="off">
+                </div>
+
+                <button class="btn-action" id="btn-otp-submit" style="margin-top: 10px; background: var(--primary-gradient); height: 50px; border-radius: 14px; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">
+                    <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+                    Verifikasi & Masuk Akun
+                </button>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 12px;">
+                    <a href="#" id="link-resend-otp" style="color: var(--primary); font-weight: 600; text-decoration: none;">Kirim Ulang Kode OTP</a>
+                    <a href="#" id="link-otp-to-login" style="color: var(--text-secondary); text-decoration: none;">Batal / Kembali Login</a>
+                </div>
+            </div>
+            
+            <!-- KYC & Info Compliance Section -->
+            <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 11px; color: var(--text-secondary); text-align: center; line-height: 1.6;">
+                <p style="margin-bottom: 8px;">Jawa Pay adalah platform keagenan digital untuk pengisian pulsa, paket data, dan token PLN prabayar resmi.</p>
+                <div style="display: flex; justify-content: center; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
+                    <a href="#" id="link-faq" style="color: var(--primary); text-decoration: none; font-weight: 500;">FAQ</a>
+                    <span>•</span>
+                    <a href="#" id="link-terms" style="color: var(--primary); text-decoration: none; font-weight: 500;">Syarat & Ketentuan</a>
+                    <span>•</span>
+                    <a href="#" id="link-refund" style="color: var(--primary); text-decoration: none; font-weight: 500;">Kebijakan Refund</a>
+                    <span>•</span>
+                    <a href="#" id="link-privacy" style="color: var(--primary); text-decoration: none; font-weight: 500;">Kebijakan Privasi</a>
+                    <span>•</span>
+                    <a href="#" id="link-contact" style="color: var(--primary); text-decoration: none; font-weight: 500;">Hubungi Kami</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Section (Hidden by Default until Login) -->
+    <div class="app-container" id="main-app-container" style="display: none;">
+        <!-- Header -->
+        <header>
+            <div class="brand">
+                <img src="logo.png" class="brand-icon" alt="Logo" style="object-fit: cover; background: transparent;">
+                <div>
+                    <h1 class="brand-name">Jawa Pay</h1>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-top: -4px;">Mitra Agen Pulsa & Data</p>
+                </div>
+            </div>
+            <div class="agent-profile" id="agent-profile">
+                <div class="agent-balance">
+                    <p class="balance-label" id="agent-name">Nama Agen</p>
+                    <p class="balance-value" id="balance-value">Rp 0</p>
+                </div>
+                <button class="btn-topup" id="btn-topup">
+                    <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i>
+                    Top Up
+                </button>
+                <button class="tab-btn" id="btn-logout" style="padding: 10px; border-radius: 12px; background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.15); color: #ef4444; width: 38px; height: 38px; display: flex; justify-content: center; align-items: center; margin-left: 6px;">
+                    <i data-lucide="log-out" style="width: 16px; height: 16px;"></i>
+                </button>
+                <button class="tab-btn" id="btn-settings" style="padding: 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: var(--text-secondary); width: 38px; height: 38px; display: flex; justify-content: center; align-items: center; margin-left: 6px;">
+                    <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation Menu -->
+        <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+            <button class="tab-btn active" id="nav-transaction" style="border-radius: 12px; padding: 12px 20px;">
+                <i data-lucide="shopping-bag" style="width: 16px; height: 16px;"></i>
+                Transaksi Baru
+            </button>
+            <button class="tab-btn" id="nav-analytics" style="border-radius: 12px; padding: 12px 20px;">
+                <i data-lucide="bar-chart-2" style="width: 16px; height: 16px;"></i>
+                Dashboard Analitik
+            </button>
+            <button class="tab-btn" id="nav-downlines" style="border-radius: 12px; padding: 12px 20px;">
+                <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+                Kelola Downline 👥
+            </button>
+            <button class="tab-btn" id="nav-admin" style="border-radius: 12px; padding: 12px 20px; display: none; background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.15); color: #c084fc;">
+                <i data-lucide="shield" style="width: 16px; height: 16px;"></i>
+                Panel Admin 👑
+            </button>
+        </div>
+
+        <!-- Announcement Banner -->
+        <div class="glass-card announcement-banner" style="margin-bottom: 24px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-radius: 12px; font-size: 13px;">
+            <div class="announcement-badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; padding: 4px 8px; border-radius: 8px; font-weight: 700; font-size: 11px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;">
+                <i data-lucide="megaphone" style="width: 12px; height: 12px;"></i>
+                INFO
+            </div>
+            <div class="marquee-wrapper" style="overflow: hidden; flex: 1; position: relative; height: 18px;">
+                <div class="marquee-content" style="position: absolute; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--text-secondary);" id="announcement-text">
+                    📢 Info Layanan: Sistem pembayaran QRIS & Virtual Account Mandiri/BCA lancar jaya | ⚡ TOKEN PLN promo potongan harga otomatis malam ini | 📱 Layanan Paket Data XL gangguan pemeliharaan sementara.
+                </div>
+            </div>
+        </div>
+
+        <!-- Promo Banner Slider (Carousel) -->
+        <div class="glass-card promo-carousel" style="margin-bottom: 24px; padding: 0; overflow: hidden; border-radius: 16px; position: relative; height: 160px; width: 100%; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);">
+            <div class="carousel-track" style="display: flex; width: 300%; height: 100%; transition: transform 0.6s ease-in-out;" id="carousel-track">
+                <!-- Slide 1 -->
+                <div class="carousel-slide" style="width: 33.333%; height: 100%; position: relative; background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%); display: flex; align-items: center; justify-content: space-between; padding: 24px 32px;">
+                    <div style="flex: 1; z-index: 2;">
+                        <span style="font-size: 10px; background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); padding: 4px 8px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">PROMO PLN</span>
+                        <h2 style="font-size: 18px; font-weight: 800; color: white; margin-top: 8px; line-height: 1.2;">⚡ TOKEN PLN HEMAT</h2>
+                        <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Potongan otomatis biaya admin s.d Rp 2.000 malam ini!</p>
+                    </div>
+                    <div style="width: 40%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 2;">
+                        <i data-lucide="zap" style="width: 64px; height: 64px; color: #fbbf24; filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.6));"></i>
+                    </div>
+                    <div style="position: absolute; right: 0; bottom: 0; width: 120px; height: 120px; background: radial-gradient(circle, rgba(168,85,247,0.3) 0%, rgba(0,0,0,0) 70%); z-index: 1;"></div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="carousel-slide" style="width: 33.333%; height: 100%; position: relative; background: linear-gradient(135deg, #022c22 0%, #064e3b 100%); display: flex; align-items: center; justify-content: space-between; padding: 24px 32px;">
+                    <div style="flex: 1; z-index: 2;">
+                        <span style="font-size: 10px; background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 8px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">CASHBACK QRIS</span>
+                        <h2 style="font-size: 18px; font-weight: 800; color: white; margin-top: 8px; line-height: 1.2;">📱 DEPOSIT GRATIS</h2>
+                        <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Top Up saldo via QRIS instan tanpa biaya admin tambahan.</p>
+                    </div>
+                    <div style="width: 40%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 2;">
+                        <i data-lucide="qr-code" style="width: 64px; height: 64px; color: #34d399; filter: drop-shadow(0 0 15px rgba(52, 211, 153, 0.6));"></i>
+                    </div>
+                    <div style="position: absolute; right: 0; bottom: 0; width: 120px; height: 120px; background: radial-gradient(circle, rgba(16,185,129,0.3) 0%, rgba(0,0,0,0) 70%); z-index: 1;"></div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="carousel-slide" style="width: 33.333%; height: 100%; position: relative; background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 100%); display: flex; align-items: center; justify-content: space-between; padding: 24px 32px;">
+                    <div style="flex: 1; z-index: 2;">
+                        <span style="font-size: 10px; background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 4px 8px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">PARTNER OFFICIAL</span>
+                        <h2 style="font-size: 18px; font-weight: 800; color: white; margin-top: 8px; line-height: 1.2;">⚡ PROSES DETIKAN</h2>
+                        <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Server H2H langsung terhubung ke Digiflazz, transaksi kilat!</p>
+                    </div>
+                    <div style="width: 40%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 2;">
+                        <i data-lucide="check-circle" style="width: 64px; height: 64px; color: #38bdf8; filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.6));"></i>
+                    </div>
+                    <div style="position: absolute; right: 0; bottom: 0; width: 120px; height: 120px; background: radial-gradient(circle, rgba(56,189,248,0.3) 0%, rgba(0,0,0,0) 70%); z-index: 1;"></div>
+                </div>
+            </div>
+            
+            <!-- Dots Indicator -->
+            <div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 3;" id="carousel-dots">
+                <span class="carousel-dot active" data-slide="0" style="width: 8px; height: 8px; border-radius: 50%; background: white; cursor: pointer; opacity: 1; transition: opacity 0.3s;"></span>
+                <span class="carousel-dot" data-slide="1" style="width: 8px; height: 8px; border-radius: 50%; background: white; cursor: pointer; opacity: 0.4; transition: opacity 0.3s;"></span>
+                <span class="carousel-dot" data-slide="2" style="width: 8px; height: 8px; border-radius: 50%; background: white; cursor: pointer; opacity: 0.4; transition: opacity 0.3s;"></span>
+            </div>
+        </div>
+
+        <!-- Pending Deposit Widget (Agent View Only) -->
+        <div class="glass-card active-deposit-widget" id="active-deposit-widget" style="display: none; margin-bottom: 24px; padding: 18px 24px; border-radius: 16px; border: 1px solid rgba(245, 158, 11, 0.25); background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.1) 100%);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; padding: 10px; border-radius: 12px;">
+                        <i data-lucide="clock" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 14px; font-weight: 700; color: white;">Menunggu Transfer Deposit</h4>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
+                            Harap transfer tepat <strong id="widget-dep-amount" style="color: #fbbf24; font-family: monospace; font-size: 13px;">Rp 0</strong> ke rekening bank <strong id="widget-dep-bank" style="color: white;">BCA</strong>.
+                        </p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-topup" id="btn-widget-dep-detail" style="height: 36px; font-size: 12px; padding: 0 16px; border-radius: 8px;">
+                        <i data-lucide="eye" style="width: 14px; height: 14px;"></i> Detail Transfer
+                    </button>
+                    <button class="btn-action" id="btn-widget-dep-cancel" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #ef4444; height: 36px; font-size: 12px; padding: 0 16px; border-radius: 8px;">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Batalkan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 1: TRANSACTION VIEW -->
+        <div id="view-transaction">
+            <!-- Main Layout -->
+            <main class="main-grid">
+                <!-- Left Side: Transaction Form -->
+                <div class="glass-card">
+                    <h2 class="card-title">
+                        <i data-lucide="shopping-bag" class="text-primary" style="width: 24px; height: 24px;"></i>
+                        Pilih Layanan & Produk
+                    </h2>
+
+                    <!-- Product Categories -->
+                    <div class="product-tabs">
+                        <button class="tab-btn active" data-category="pulsa">
+                            <i data-lucide="phone" style="width: 16px; height: 16px;"></i>
+                            Pulsa Seluler
+                        </button>
+                        <button class="tab-btn" data-category="data">
+                            <i data-lucide="wifi" style="width: 16px; height: 16px;"></i>
+                            Paket Data
+                        </button>
+                        <button class="tab-btn" data-category="aktif">
+                            <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                            Masa Aktif
+                        </button>
+                        <button class="tab-btn" data-category="pln">
+                            <i data-lucide="zap" style="width: 16px; height: 16px;"></i>
+                            Token PLN
+                        </button>
+                        <button class="tab-btn" data-category="emoney">
+                            <i data-lucide="wallet" style="width: 16px; height: 16px;"></i>
+                            E-Wallet
+                        </button>
+                        <button class="tab-btn" data-category="game">
+                            <i data-lucide="gamepad-2" style="width: 16px; height: 16px;"></i>
+                            Game Voucher
+                        </button>
+                        <button class="tab-btn" data-category="tv">
+                            <i data-lucide="tv" style="width: 16px; height: 16px;"></i>
+                            Voucher TV
+                        </button>
+                    </div>
+
+                    <!-- Input target number / ID -->
+                    <div class="input-group">
+                        <label class="input-label" id="input-label" for="target-number">Nomor Handphone Tujuan</label>
+                        <div class="input-wrapper">
+                            <input type="tel" id="target-number" class="input-field" placeholder="Contoh: 081234567890" autocomplete="off">
+                            <div id="operator-badge" class="operator-badge"></div>
+                        </div>
+                    </div>
+
+                    <!-- Subcategory Filter for E-money / Game -->
+                    <div class="input-group" id="subcategory-wrapper" style="display: none; margin-top: -12px;">
+                        <label class="input-label" id="subcategory-label" for="subcategory-select">Pilih Provider</label>
+                        <select id="subcategory-select" class="input-field" style="padding-right: 20px; cursor: pointer; appearance: none; background: rgba(0, 0, 0, 0.3);">
+                            <option value="">-- Pilih --</option>
+                        </select>
+                    </div>
+
+                    <!-- Grid Products -->
+                    <div class="products-grid" id="products-grid">
+                        <!-- Products generated by JS -->
+                    </div>
+                </div>
+
+                <!-- Right Side: Order Details & Payment -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; height: fit-content;">
+                    <div>
+                        <h2 class="card-title">
+                            <i data-lucide="credit-card" class="text-primary" style="width: 24px; height: 24px;"></i>
+                            Detail Transaksi
+                        </h2>
+                        
+                        <!-- Checkout Details Panel -->
+                        <div class="checkout-details" id="checkout-box" style="display: none;">
+                            <div class="checkout-row">
+                                <span class="checkout-label">Produk</span>
+                                <span class="checkout-val" id="checkout-card-name">-</span>
+                            </div>
+                            <div class="checkout-row">
+                                <span class="checkout-label">No. Tujuan</span>
+                                <span class="checkout-val" id="checkout-card-target">-</span>
+                            </div>
+                            
+                            <div class="checkout-divider"></div>
+                            
+                            <div class="checkout-row">
+                                <span class="checkout-label">Harga Agen</span>
+                                <span class="checkout-val" id="checkout-price-agent">-</span>
+                            </div>
+                            <div class="checkout-row">
+                                <span class="checkout-label">Harga Jual Konsumen</span>
+                                <span class="checkout-val" id="checkout-price-sell">-</span>
+                            </div>
+                            <div class="checkout-row">
+                                <span class="checkout-label">Estimasi Keuntungan</span>
+                                <span class="checkout-val text-success" id="checkout-profit">-</span>
+                            </div>
+
+                            <div class="checkout-divider"></div>
+
+                            <!-- Voucher Code Coupon Input -->
+                            <div class="voucher-input-box" style="margin-top: 12px; margin-bottom: 12px;">
+                                <label class="input-label" style="font-size: 11px; margin-bottom: 4px; display: block; text-align: left;">Kode Voucher / Promo</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="text" id="checkout-voucher-code" class="input-field" placeholder="Contoh: JAWAPAYNEW" style="text-transform: uppercase; font-size: 12px; padding: 8px 12px; height: 38px; border-radius: 8px; margin: 0;" autocomplete="off">
+                                    <button class="btn-topup" id="btn-apply-voucher" style="height: 38px; border-radius: 8px; font-size: 11px; font-weight: 700; padding: 0 16px; min-width: 80px; border: 1px solid var(--card-border); margin: 0; background: var(--primary-gradient);">Pakai</button>
+                                </div>
+                                <p id="voucher-status-msg" style="font-size: 11px; margin-top: 5px; display: none; text-align: left; font-weight: 500;"></p>
+                            </div>
+
+                            <div class="checkout-divider"></div>
+
+                            <!-- Payment Methods Select -->
+                            <p class="input-label" style="margin-top: 10px; margin-bottom: 4px; text-align: left;">Metode Pembayaran</p>
+                            <div class="payment-methods" id="payment-methods-list">
+                                <!-- Rendered dynamically by JS -->
+                            </div>
+
+                            <div class="checkout-row" id="checkout-discount-row" style="display: none; margin-top: 8px;">
+                                <span class="checkout-label text-success">Diskon Voucher</span>
+                                <span class="checkout-val text-success" id="checkout-discount-val">-Rp 0</span>
+                            </div>
+
+                            <div class="checkout-row" style="margin-top: 10px; border-top: 1px dashed var(--card-border); padding-top: 10px;">
+                                <span class="checkout-label" style="font-size: 16px; font-weight: 700; color: var(--text-primary);">Total Bayar</span>
+                                <span class="checkout-val checkout-total" id="checkout-total">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <!-- Selected product empty placeholder -->
+                        <div id="checkout-empty-state" class="empty-state" style="padding: 60px 0;">
+                            <i data-lucide="shopping-cart" style="width: 48px; height: 48px; color: var(--text-muted);"></i>
+                            <p style="font-size: 14px;">Belum ada produk yang dipilih</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 24px;">
+                        <button class="btn-action" id="btn-pay" disabled>
+                            <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+                            Proses Pembayaran
+                        </button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Transaction History -->
+            <section class="glass-card history-section">
+                <h2 class="card-title">
+                    <i data-lucide="history" class="text-primary" style="width: 24px; height: 24px;"></i>
+                    Riwayat Transaksi Terakhir
+                </h2>
+                <div class="history-table-wrapper">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>TRX ID</th>
+                                <th>WAKTU</th>
+                                <th>PRODUK & TUJUAN</th>
+                                <th>HARGA JUAL</th>
+                                <th>PROFIT</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-list">
+                            <!-- Transaksi dirender oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- VIEW 2: ANALYTICS VIEW -->
+        <div id="view-analytics" style="display: none; flex-direction: column; gap: 28px;">
+            <!-- Stats Summary Cards Grid -->
+            <div class="stats-summary-grid">
+                <div class="glass-card stats-card">
+                    <div class="stats-icon" style="background: rgba(99, 102, 241, 0.1); color: #6366f1;">
+                        <i data-lucide="check-circle-2"></i>
+                    </div>
+                    <div>
+                        <p class="stats-label">Transaksi Sukses</p>
+                        <h3 class="stats-value" id="stats-total-trx">0</h3>
+                    </div>
+                </div>
+                <div class="glass-card stats-card">
+                    <div class="stats-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                        <i data-lucide="sun"></i>
+                    </div>
+                    <div>
+                        <p class="stats-label">Laba Hari Ini</p>
+                        <h3 class="stats-value text-warning" id="stats-profit-today">Rp 0</h3>
+                    </div>
+                </div>
+                <div class="glass-card stats-card">
+                    <div class="stats-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                        <i data-lucide="calendar"></i>
+                    </div>
+                    <div>
+                        <p class="stats-label">Laba Bulan Ini</p>
+                        <h3 class="stats-value text-success" id="stats-profit-month">Rp 0</h3>
+                    </div>
+                </div>
+                <div class="glass-card stats-card">
+                    <div class="stats-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">
+                        <i data-lucide="line-chart"></i>
+                    </div>
+                    <div>
+                        <p class="stats-label">Total Laba Bersih</p>
+                        <h3 class="stats-value" style="color: #c084fc;" id="stats-total-profit">Rp 0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graph and Reports Grid -->
+            <div class="main-grid" style="grid-template-columns: 1.8fr 1.1fr; gap: 28px;">
+                <!-- Profit Line Chart -->
+                <div class="glass-card" style="padding: 24px;">
+                    <h3 class="card-title">
+                        <i data-lucide="activity" class="text-primary" style="width: 20px; height: 20px;"></i>
+                        Grafik Keuntungan Agen
+                    </h3>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="profitChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Export CSV Card -->
+                <div class="glass-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 class="card-title">
+                            <i data-lucide="download" class="text-primary" style="width: 20px; height: 20px;"></i>
+                            Unduh Laporan Penjualan
+                        </h3>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6;">
+                            Dapatkan rekapitulasi data penjualan pulsa, paket data, dan token PLN dalam format spreadsheet (.csv) yang kompatibel dengan Microsoft Excel atau Google Sheets.
+                        </p>
+                        <div class="checkout-divider" style="margin-bottom: 20px;"></div>
+                        <div class="checkout-row" style="margin-bottom: 8px; font-size: 13px;">
+                            <span class="checkout-label">Format Dokumen</span>
+                            <span class="checkout-val" style="font-weight: 700;">CSV (Comma-Separated Values)</span>
+                        </div>
+                        <div class="checkout-row" style="font-size: 13px;">
+                            <span class="checkout-label">Karakter Enkoding</span>
+                            <span class="checkout-val">UTF-8 (Standard)</span>
+                        </div>
+                    </div>
+                    <button class="btn-action" id="btn-export-csv" style="background: var(--secondary-gradient); margin-top: 32px; height: 50px; border-radius: 14px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);">
+                        <i data-lucide="file-text" style="width: 18px; height: 18px;"></i>
+                        Ekspor Laporan CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2.5: DOWNLINES VIEW -->
+        <div id="view-downlines" style="display: none; flex-direction: column; gap: 24px;">
+            <!-- Downlines Header -->
+            <div class="glass-card" style="padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                <div>
+                    <h2 style="font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="users" class="text-primary" style="width: 24px; height: 24px;"></i>
+                        Kelola Jaringan Downline (Referral)
+                    </h2>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Daftarkan agen baru di bawah Anda, atur selisih harga (markup), dan pantau komisi masuk.</p>
+                </div>
+            </div>
+
+            <!-- Downlines Grid Content -->
+            <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                <!-- Register Downline Form Card -->
+                <div class="glass-card" style="padding: 20px; border-radius: 16px;">
+                    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="user-plus" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                        Daftarkan Agen Baru (Downline)
+                    </h3>
+                    <form id="downline-register-form">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; align-items: flex-end;">
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label class="input-label" style="font-size: 10px;">Nama Lengkap</label>
+                                <input type="text" id="downline-name" placeholder="Nama Agen" style="font-size: 12px; padding: 8px 10px;" class="input-field" required>
+                            </div>
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label class="input-label" style="font-size: 10px;">Username Login</label>
+                                <input type="text" id="downline-username" placeholder="username_agen" style="font-size: 12px; padding: 8px 10px;" class="input-field" required>
+                            </div>
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label class="input-label" style="font-size: 10px;">Email Agen</label>
+                                <input type="email" id="downline-email" placeholder="email@agen.com" style="font-size: 12px; padding: 8px 10px;" class="input-field" required>
+                            </div>
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label class="input-label" style="font-size: 10px;">Password Login</label>
+                                <input type="password" id="downline-password" placeholder="Min 6 Karakter" style="font-size: 12px; padding: 8px 10px;" class="input-field" required>
+                            </div>
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label class="input-label" style="font-size: 10px;">Selisih Harga (Markup Rp)</label>
+                                <input type="number" id="downline-markup" placeholder="Contoh: 100" style="font-size: 12px; padding: 8px 10px;" class="input-field" required>
+                            </div>
+                            <button type="submit" class="btn-topup" style="height: 38px; border-radius: 8px; font-size: 12px; justify-content: center; font-weight: 700; width: 100%;">
+                                <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Daftarkan Agen
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Downline List Table Card -->
+                <div class="glass-card" style="padding: 24px; border-radius: 20px;">
+                    <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="list" style="width: 18px; height: 18px; color: var(--primary);"></i>
+                        Daftar Downline Anda
+                    </h3>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--card-border); color: var(--text-secondary);">
+                                    <th style="padding: 10px 6px;">Tanggal Gabung</th>
+                                    <th style="padding: 10px 6px;">Nama Agen</th>
+                                    <th style="padding: 10px 6px;">Username</th>
+                                    <th style="padding: 10px 6px;">Email</th>
+                                    <th style="padding: 10px 6px; text-align: right;">Saldo</th>
+                                    <th style="padding: 10px 6px; text-align: center;">Markup (Selisih)</th>
+                                    <th style="padding: 10px 6px; text-align: center;">Total Trx</th>
+                                    <th style="padding: 10px 6px; text-align: right;">Komisi Didapat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="downline-list-table-body">
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: ADMIN PANEL VIEW -->
+        <div id="view-admin" style="display: none; flex-direction: column; gap: 24px;">
+            <!-- Admin Header -->
+            <div class="glass-card" style="padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                <div>
+                    <h2 style="font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="shield" class="text-primary" style="width: 24px; height: 24px;"></i>
+                        Panel Kontrol Administrator
+                    </h2>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Kelola agen, saldo, markup, transaksi, dan voucher promo Jawa Pay</p>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="admin-subtabs-nav">
+                    <button class="tab-btn active" data-admin-tab="summary" style="font-size: 12px; padding: 8px 14px; border-radius: 8px;">Ringkasan</button>
+                    <button class="tab-btn" data-admin-tab="users" style="font-size: 12px; padding: 8px 14px; border-radius: 8px;">Kelola Agen</button>
+                    <button class="tab-btn" data-admin-tab="transactions" style="font-size: 12px; padding: 8px 14px; border-radius: 8px;">Transaksi Global</button>
+                    <button class="tab-btn" data-admin-tab="vouchers" style="font-size: 12px; padding: 8px 14px; border-radius: 8px;">Kelola Voucher</button>
+                    <button class="tab-btn" data-admin-tab="deposits" style="font-size: 12px; padding: 8px 14px; border-radius: 8px;">Persetujuan Depo</button>
+                </div>
+            </div>
+
+            <!-- Subview 1: Summary -->
+            <div id="admin-view-summary" class="admin-subview">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                    <!-- Stat Card 1 -->
+                    <div class="glass-card" style="padding: 16px 20px; border-radius: 16px;">
+                        <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Total Agen Terdaftar</span>
+                        <h3 style="font-size: 26px; font-weight: 800; margin-top: 6px; color: #38bdf8;" id="admin-stat-users">0</h3>
+                    </div>
+                    <!-- Stat Card 2 -->
+                    <div class="glass-card" style="padding: 16px 20px; border-radius: 16px;">
+                        <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Total Saldo Agen</span>
+                        <h3 style="font-size: 26px; font-weight: 800; margin-top: 6px; color: #10b981;" id="admin-stat-balance">Rp 0</h3>
+                    </div>
+                    <!-- Stat Card 3 -->
+                    <div class="glass-card" style="padding: 16px 20px; border-radius: 16px;">
+                        <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Saldo Supplier Digiflazz</span>
+                        <h3 style="font-size: 26px; font-weight: 800; margin-top: 6px; color: #f59e0b;" id="admin-stat-digiflazz">Rp 0</h3>
+                    </div>
+                </div>
+
+                <!-- Transaction Stats -->
+                <div class="glass-card" style="padding: 24px; border-radius: 20px;">
+                    <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="activity" style="width: 18px; height: 18px; color: var(--primary);"></i>
+                        Status Transaksi Global (PPOB)
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; text-align: center;">
+                        <div style="padding: 14px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 12px;">
+                            <span style="font-size: 11px; color: #34d399; font-weight: 700;">SUKSES</span>
+                            <p style="font-size: 24px; font-weight: 800; margin-top: 4px; color: #10b981;" id="admin-stat-success">0</p>
+                        </div>
+                        <div style="padding: 14px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.15); border-radius: 12px;">
+                            <span style="font-size: 11px; color: #fbbf24; font-weight: 700;">PENDING</span>
+                            <p style="font-size: 24px; font-weight: 800; margin-top: 4px; color: #f59e0b;" id="admin-stat-pending">0</p>
+                        </div>
+                        <div style="padding: 14px; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.15); border-radius: 12px;">
+                            <span style="font-size: 11px; color: #f87171; font-weight: 700;">GAGAL</span>
+                            <p style="font-size: 24px; font-weight: 800; margin-top: 4px; color: #ef4444;" id="admin-stat-failed">0</p>
+                        </div>
+                </div>
+
+                <!-- Announcement Control -->
+                <div class="glass-card" style="padding: 24px; border-radius: 20px; margin-top: 24px;">
+                    <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="megaphone" style="width: 18px; height: 18px; color: var(--primary);"></i>
+                        Kelola Pengumuman Berjalan (Banner Info)
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div class="input-group" style="margin-bottom: 0;">
+                            <label class="input-label" for="admin-announcement-input">Teks Pengumuman</label>
+                            <textarea id="admin-announcement-input" class="input-field" rows="3" style="font-size: 13px; padding: 12px; height: auto; resize: vertical;" placeholder="Masukkan pengumuman berjalan baru..."></textarea>
+                        </div>
+                        <button class="btn-topup" id="btn-admin-save-announcement" style="height: 42px; border-radius: 10px; font-size: 13px; justify-content: center; font-weight: 700; width: 100%;">
+                            <i data-lucide="save" style="width: 16px; height: 16px;"></i> Simpan Pengumuman Berjalan
+                        </button>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Subview 2: Users Management -->
+            <div id="admin-view-users" class="admin-subview" style="display: none;">
+                <div class="glass-card" style="padding: 24px; border-radius: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-size: 15px; font-weight: 700;">Daftar Seluruh Agen</h3>
+                        <span style="font-size: 12px; color: var(--text-muted);" id="admin-users-count">0 Agen</span>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--card-border); color: var(--text-secondary);">
+                                    <th style="padding: 10px 6px;">ID / Nama</th>
+                                    <th style="padding: 10px 6px;">Username / Email</th>
+                                    <th style="padding: 10px 6px; text-align: right;">Saldo</th>
+                                    <th style="padding: 10px 6px; text-align: right;">Markup Flat</th>
+                                    <th style="padding: 10px 6px; text-align: center;">Status</th>
+                                    <th style="padding: 10px 6px; text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-table-body">
+                                <!-- Agen rows populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subview 3: Transactions Management -->
+            <div id="admin-view-transactions" class="admin-subview" style="display: none;">
+                <div class="glass-card" style="padding: 24px; border-radius: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="font-size: 15px; font-weight: 700;">Kelola Transaksi Global</h3>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="admin-trx-search" placeholder="Cari No. HP / ID" style="padding: 6px 12px; font-size: 12px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.3); color: white; width: 140px;">
+                            <select id="admin-trx-filter-status" style="padding: 6px 8px; font-size: 12px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.3); color: white; cursor: pointer;">
+                                <option value="ALL">Semua Status</option>
+                                <option value="Sukses">Sukses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Gagal">Gagal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto; max-height: 480px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--card-border); color: var(--text-secondary);">
+                                    <th style="padding: 8px 4px;">ID / Waktu</th>
+                                    <th style="padding: 8px 4px;">Agen</th>
+                                    <th style="padding: 8px 4px;">Produk / Tujuan</th>
+                                    <th style="padding: 8px 4px; text-align: right;">Harga Agen</th>
+                                    <th style="padding: 8px 4px;">Serial Number (SN)</th>
+                                    <th style="padding: 8px 4px; text-align: center;">Status</th>
+                                    <th style="padding: 8px 4px; text-align: center;">Ubah Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-trxs-table-body">
+                                <!-- Transaction rows populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subview 4: Vouchers Management -->
+            <div id="admin-view-vouchers" class="admin-subview" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                    <!-- Create Voucher Card -->
+                    <div class="glass-card" style="padding: 20px; border-radius: 16px;">
+                        <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="plus-circle" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                            Buat Kode Voucher Baru
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; align-items: flex-end;">
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label class="input-label" style="font-size: 10px;">Kode Voucher</label>
+                                <input type="text" id="admin-voucher-code" placeholder="DISKONBARU" style="font-size: 12px; padding: 8px 10px;" class="input-field">
+                            </div>
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label class="input-label" style="font-size: 10px;">Potongan (Rp / %)</label>
+                                <input type="number" id="admin-voucher-discount" placeholder="1000" style="font-size: 12px; padding: 8px 10px;" class="input-field">
+                            </div>
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label class="input-label" style="font-size: 10px;">Tipe Diskon</label>
+                                <select id="admin-voucher-type" class="input-field" style="font-size: 12px; padding: 8px; cursor: pointer;">
+                                    <option value="flat">Flat (Rupiah)</option>
+                                    <option value="percent">Persentase (%)</option>
+                                </select>
+                            </div>
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label class="input-label" style="font-size: 10px;">Limit Penggunaan</label>
+                                <input type="number" id="admin-voucher-max-use" placeholder="100" style="font-size: 12px; padding: 8px 10px;" class="input-field">
+                            </div>
+                            <button class="btn-topup" id="btn-admin-create-voucher" style="height: 38px; border-radius: 8px; font-size: 12px; justify-content: center; font-weight: 700; width: 100%;">
+                                <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Buat Voucher
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Vouchers Table Card -->
+                    <div class="glass-card" style="padding: 24px; border-radius: 20px;">
+                        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 16px;">Voucher Promo Aktif</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid var(--card-border); color: var(--text-secondary);">
+                                        <th style="padding: 10px 6px;">Kode</th>
+                                        <th style="padding: 10px 6px;">Potongan</th>
+                                        <th style="padding: 10px 6px;">Tipe</th>
+                                        <th style="padding: 10px 6px; text-align: center;">Digunakan</th>
+                                        <th style="padding: 10px 6px; text-align: center;">Limit</th>
+                                        <th style="padding: 10px 6px; text-align: center;">Status</th>
+                                        <th style="padding: 10px 6px; text-align: center;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-vouchers-table-body">
+                                    <!-- Voucher rows populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Subview 5: Deposit Approvals -->
+            <div id="admin-view-deposits" class="admin-subview" style="display: none;">
+                <div class="glass-card" style="padding: 24px; border-radius: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="wallet" style="width: 18px; height: 18px; color: var(--primary);"></i>
+                            Persetujuan Deposit Manual
+                        </h3>
+                        <span style="font-size: 12px; color: var(--text-muted);" id="admin-deposits-count">0 Pengajuan</span>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--card-border); color: var(--text-secondary);">
+                                    <th style="padding: 12px 8px;">ID / Tanggal</th>
+                                    <th style="padding: 12px 8px;">Agen</th>
+                                    <th style="padding: 12px 8px;">Bank</th>
+                                    <th style="padding: 12px 8px; text-align: right;">Jumlah Transfer</th>
+                                    <th style="padding: 12px 8px; text-align: center;">Status</th>
+                                    <th style="padding: 12px 8px; text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-deposits-table-body">
+                                <!-- Deposit rows populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dialog Popup 1: Kelola Saldo Agen -->
+        <div class="modal-overlay" id="admin-balance-modal">
+            <div class="modal-container" style="max-width: 360px;">
+                <button class="modal-close" onclick="document.getElementById('admin-balance-modal').classList.remove('show')"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+                <h3 class="modal-title">Penyesuaian Saldo Agen</h3>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;" id="admin-balance-modal-desc">Sesuaikan saldo untuk agen</p>
+                
+                <div class="input-group">
+                    <label class="input-label" for="admin-balance-action-select">Pilih Tindakan</label>
+                    <select id="admin-balance-action-select" class="input-field" style="cursor: pointer; padding: 10px 12px; font-size: 13px;">
+                        <option value="set">Set Saldo Langsung (=)</option>
+                        <option value="add">Tambah Saldo (+)</option>
+                        <option value="subtract">Kurangi Saldo (-)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="admin-balance-amount-input">Nominal Penyesuaian (Rp)</label>
+                    <input type="number" id="admin-balance-amount-input" class="input-field" placeholder="Contoh: 50000" style="font-size: 15px;">
+                </div>
+
+                <button class="btn-action" id="btn-admin-save-balance" style="margin-top: 10px;">
+                    <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+                    Simpan Penyesuaian
+                </button>
+            </div>
+        </div>
+
+        <!-- Dialog Popup 2: Kelola Markup Agen -->
+        <div class="modal-overlay" id="admin-markup-modal">
+            <div class="modal-container" style="max-width: 360px;">
+                <button class="modal-close" onclick="document.getElementById('admin-markup-modal').classList.remove('show')"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+                <h3 class="modal-title">Pengaturan Markup Keuntungan</h3>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;" id="admin-markup-modal-desc">Sesuaikan markup untuk agen</p>
+
+                <div class="input-group">
+                    <label class="input-label" for="admin-markup-amount-input">Keuntungan Flat (Markup Rp)</label>
+                    <input type="number" id="admin-markup-amount-input" class="input-field" placeholder="Contoh: 1500" style="font-size: 15px;">
+                    <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px; display: block;">Keuntungan ini otomatis ditambahkan ke harga jual agen terkait.</span>
+                </div>
+
+                <button class="btn-action" id="btn-admin-save-markup" style="margin-top: 10px;">
+                    <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+                    Simpan Perubahan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal 1: Top Up Saldo -->
+    <div class="modal-overlay" id="topup-modal">
+        <div class="modal-container">
+            <button class="modal-close"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+            <h3 class="modal-title">Top Up Saldo Agen</h3>
+            
+            <div id="topup-form-content">
+                <div class="input-group" style="margin-bottom: 14px;">
+                    <label class="input-label">Pilih Metode Pembayaran</label>
+                    <select id="topup-bank-select" class="input-field" style="cursor: pointer; padding: 10px 12px; font-size: 13px; appearance: none; background: rgba(0,0,0,0.3);">
+                        <option value="QRIS" selected>⚡ QRIS (Otomatis - Scan & Saldo Masuk Instan)</option>
+                    </select>
+                </div>
+
+                <p class="input-label" style="margin-bottom: 8px;">Pilih Nominal Cepat</p>
+                <div class="topup-choices" style="margin-bottom: 14px;">
+                    <button class="topup-choice-btn" data-amount="5000">5K</button>
+                    <button class="topup-choice-btn" data-amount="10000">10K</button>
+                    <button class="topup-choice-btn" data-amount="20000">20K</button>
+                    <button class="topup-choice-btn" data-amount="50000">50K</button>
+                    <button class="topup-choice-btn" data-amount="100000">100K</button>
+                    <button class="topup-choice-btn" data-amount="500000">500K</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="topup-amount">Nominal Custom (Rp)</label>
+                    <input type="number" id="topup-amount" class="input-field" placeholder="Masukkan jumlah top up (Min Rp 2.000)" style="font-size: 16px;">
+                </div>
+
+                <button class="btn-action" id="btn-save-topup" style="margin-top: 10px;">
+                    <i data-lucide="check-circle-2" style="width: 18px; height: 18px;"></i>
+                    Dapatkan Tiket Transfer
+                </button>
+            </div>
+
+            <!-- Top Up Instruction Card -->
+            <div id="topup-instruction-box" style="display: none; flex-direction: column; gap: 14px; background: rgba(0,0,0,0.25); border: 1px solid var(--card-border); padding: 16px; border-radius: 14px; margin-top: 10px;">
+                <div style="text-align: center; padding: 6px 0;">
+                    <span style="font-size: 10px; background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); padding: 3px 8px; border-radius: 20px; font-weight: 700; letter-spacing: 0.5px;">TRANSFER NOMINAL TEPAT</span>
+                    <h4 style="font-size: 22px; font-weight: 800; color: #fbbf24; margin-top: 8px;" id="topup-ins-total">Rp 0</h4>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; line-height: 1.4;">Harap transfer nominal tepat hingga 3 digit kode unik terakhir agar deposit Anda dikenali pemilik.</p>
+                </div>
+                
+                <div class="checkout-divider" style="margin: 0;"></div>
+
+                <div style="font-size: 12px; display: flex; flex-direction: column; gap: 6px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="checkout-label">Bank Tujuan:</span>
+                        <span class="checkout-val" id="topup-ins-bank" style="font-weight: 700; color: white;">BCA</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="checkout-label">No. Rekening:</span>
+                        <span class="checkout-val" id="topup-ins-acc" style="font-weight: 800; color: #38bdf8; font-family: monospace; font-size: 14px; letter-spacing: 0.5px;">1234567890</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="checkout-label">Atas Nama:</span>
+                        <span class="checkout-val" id="topup-ins-name" style="font-weight: 700; color: white;">Ahmad Syamsuri</span>
+                    </div>
+                </div>
+
+                <div class="checkout-divider" style="margin: 0;"></div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button class="btn-topup" id="btn-topup-done" style="background: var(--success-gradient); color: white; justify-content: center; height: 42px; border-radius: 10px; font-weight: 700; font-size: 12px; padding: 0;">
+                        <i data-lucide="check" style="width: 14px; height: 14px;"></i> Saya Sudah Transfer
+                    </button>
+                    <button class="btn-action" id="btn-topup-cancel" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #ef4444; justify-content: center; height: 42px; border-radius: 10px; font-size: 12px; padding: 0;">
+                        <i data-lucide="x" style="width: 14px; height: 14px;"></i> Batalkan Tiket
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Pembayaran QRIS Otomatis -->
+    <div class="modal-overlay" id="qris-modal">
+        <div class="modal-container" style="max-width: 380px; text-align: center;">
+            <button class="modal-close"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+            <h3 class="modal-title">Pembayaran QRIS Otomatis</h3>
+            
+            <div style="padding: 10px 0;">
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">
+                    Scan QRIS di bawah menggunakan GoPay, OVO, Dana, LinkAja, ShopeePay, atau m-Banking Anda.
+                </p>
+                <div style="background: white; padding: 16px; border-radius: 16px; width: 220px; height: 220px; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+                    <img id="qris-barcode-img" src="" alt="Barcode QRIS" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <p style="font-size: 11px; color: #fbbf24; background: rgba(251, 191, 36, 0.08); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(251, 191, 36, 0.2); margin: 12px auto 0 auto; font-weight: 500; max-width: 280px; line-height: 1.4;">
+                    ⚠️ PENTING: Bayar harus <b>TEPAT</b> sesuai nominal di bawah (termasuk kode unik) agar saldo otomatis masuk!
+                </p>
+            </div>
+
+            <div class="checkout-divider" style="margin: 6px 0;"></div>
+
+            <div style="text-align: center; margin: 10px 0;">
+                <p style="font-size: 11px; color: var(--text-secondary);">Total Tagihan</p>
+                <p style="font-size: 22px; font-weight: 800; color: #38bdf8;" id="qris-amount">Rp 0</p>
+            </div>
+
+            <button type="button" class="btn-topup" id="btn-simulate-qris-sandbox" style="margin-top: 10px; width: 100%; height: 38px; border-radius: 10px; font-size: 12px; justify-content: center; font-weight: 700; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8;">
+                ⚡ Simulasikan Bayar (Mode Sandbox / Uji Coba)
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal 3: Struk/Receipt Transaksi -->
+    <div class="modal-overlay" id="receipt-modal">
+        <div class="modal-container" style="max-width: 680px; width: 90%;">
+            <button class="modal-close" id="btn-close-receipt"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+            <h3 class="modal-title" style="margin-bottom: 20px;">Bukti Transaksi / Cetak Struk</h3>
+            
+            <div class="main-grid" style="grid-template-columns: 1.1fr 1fr; gap: 24px; padding: 0;">
+                <!-- Left Side: Customization Form -->
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <h4 style="font-size: 14px; font-weight: 700; color: var(--text-primary);">Setelan Struk Kasir</h4>
+                    
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label class="input-label" for="receipt-header-input">Nama Toko (Header)</label>
+                        <input type="text" id="receipt-header-input" class="input-field" placeholder="Contoh: JAWA PAY DIGITAL" style="font-size: 13px; padding: 10px 12px;">
+                    </div>
+                    
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label class="input-label" for="receipt-footer-input">Keterangan Bawah (Footer)</label>
+                        <input type="text" id="receipt-footer-input" class="input-field" placeholder="Contoh: Terima Kasih" style="font-size: 13px; padding: 10px 12px;">
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label class="input-label" for="receipt-width-select">Ukuran Kertas Printer</label>
+                        <select id="receipt-width-select" class="input-field" style="cursor: pointer; padding: 10px 12px; font-size: 13px; appearance: none; background: rgba(0, 0, 0, 0.3);">
+                            <option value="58mm">58mm (Printer Bluetooth)</option>
+                            <option value="80mm">80mm (Printer POS/Kasir)</option>
+                        </select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 16px;">
+                        <button class="btn-topup" id="btn-print-receipt" style="background: var(--success-gradient); justify-content: center; height: 46px; border-radius: 12px; font-weight: 700; font-size: 13px;">
+                            <i data-lucide="printer" style="width: 16px; height: 16px;"></i>
+                            Cetak Struk Kasir
+                        </button>
+                        <button class="btn-action" onclick="document.getElementById('receipt-modal').classList.remove('show')" style="height: 46px; border-radius: 12px; padding: 0; font-size: 13px;">
+                            <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+                            Tutup Jendela
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Side: Live Receipt Preview -->
+                <div style="display: flex; justify-content: center; align-items: flex-start; background: rgba(0,0,0,0.2); padding: 16px; border-radius: 16px; border: 1px solid var(--card-border); max-height: 400px; overflow-y: auto;">
+                    <div class="receipt-paper width-58mm" id="receipt-paper">
+                        <div class="receipt-header">
+                            <p class="receipt-shop-name" id="receipt-shop-name">JAWA PAY DIGITAL</p>
+                            <p style="font-size: 10px; color: #64748b;">STRUK BUKTI PEMBAYARAN RESMI</p>
+                        </div>
+                        
+                        <div class="receipt-row">
+                            <span>ID Transaksi:</span>
+                            <span class="receipt-val" id="receipt-trx-id">-</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Waktu:</span>
+                            <span class="receipt-val" id="receipt-time">-</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Metode Bayar:</span>
+                            <span class="receipt-val" id="receipt-payment">-</span>
+                        </div>
+
+                        <div class="receipt-divider"></div>
+
+                        <div class="receipt-row">
+                            <span>No. Tujuan/ID:</span>
+                            <span class="receipt-val" id="receipt-target">-</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Nama Produk:</span>
+                            <span class="receipt-val" id="receipt-product">-</span>
+                        </div>
+
+                        <div class="receipt-divider"></div>
+
+                        <div class="receipt-row" style="font-size: 13px;">
+                            <span>Status Trx:</span>
+                            <span class="receipt-val" id="receipt-status" style="color: #059669;">SUKSES</span>
+                        </div>
+
+                        <div class="receipt-total-box">
+                            <span>TOTAL HARGA</span>
+                            <span id="receipt-price">Rp 0</span>
+                        </div>
+
+                        <div class="receipt-footer">
+                            <p id="receipt-footer-text">Terima Kasih Telah Bertransaksi</p>
+                            <p style="font-size: 9px; margin-top: 4px;">Simpan struk ini sebagai bukti pembayaran sah.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Pengaturan & Tema Aplikasi -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal-container" style="max-width: 400px;">
+            <button class="modal-close"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+            <h3 class="modal-title">Setelan & Tema Aplikasi</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 10px;">
+                <!-- Markup Setting -->
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label class="input-label" for="settings-markup-input">Nominal Keuntungan Flat (Markup Rp)</label>
+                    <input type="number" id="settings-markup-input" class="input-field" placeholder="Contoh: 1500" style="font-size: 15px;">
+                    <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px; display: block;">
+                        Harga Jual = Harga Agen + Markup Keuntungan.
+                    </span>
+                </div>
+
+                <div class="checkout-divider" style="margin: 4px 0;"></div>
+
+                <!-- Theme Setting -->
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label class="input-label">Tema Tampilan</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px;">
+                        <button type="button" class="topup-choice-btn" id="settings-theme-dark" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 42px;">
+                            <i data-lucide="moon" style="width: 16px; height: 16px;"></i> Mode Gelap
+                        </button>
+                        <button type="button" class="topup-choice-btn" id="settings-theme-light" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 42px;">
+                            <i data-lucide="sun" style="width: 16px; height: 16px;"></i> Mode Terang
+                        </button>
+                    </div>
+                </div>
+
+                <div class="checkout-divider" style="margin: 4px 0;"></div>
+
+                <!-- Accent Color Setting -->
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label class="input-label">Warna Aksen Brand</label>
+                    <div style="display: flex; gap: 14px; margin-top: 6px; align-items: center;">
+                        <button type="button" class="accent-dot-btn" data-accent="indigo" style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid transparent; background: #6366f1; cursor: pointer; transition: transform 0.2s;" title="Indigo Spark"></button>
+                        <button type="button" class="accent-dot-btn" data-accent="emerald" style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid transparent; background: #10b981; cursor: pointer; transition: transform 0.2s;" title="Emerald Green"></button>
+                        <button type="button" class="accent-dot-btn" data-accent="sunset" style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid transparent; background: #f59e0b; cursor: pointer; transition: transform 0.2s;" title="Sunset Gold"></button>
+                        <button type="button" class="accent-dot-btn" data-accent="ocean" style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid transparent; background: #0ea5e9; cursor: pointer; transition: transform 0.2s;" title="Ocean Blue"></button>
+                    </div>
+                </div>
+
+                <div class="checkout-divider" style="margin: 4px 0;"></div>
+
+                <!-- Digiflazz H2H Deposit & Sync Section (Admin Only) -->
+                <div class="input-group" id="settings-digiflazz-container" style="margin-bottom: 0; display: none;">
+                    <label class="input-label">Saldo Modal Digiflazz (H2H Supplier)</label>
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.25); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--card-border); margin-top: 4px;">
+                        <div>
+                            <span style="font-size: 11px; color: var(--text-secondary); display: block;">Modal Deposit Digiflazz</span>
+                            <span style="font-size: 16px; font-weight: 700; color: #38bdf8;" id="settings-digiflazz-deposit">Rp ---</span>
+                        </div>
+                        <button type="button" class="tab-btn" id="btn-check-digiflazz-deposit" style="padding: 6px 12px; font-size: 11px; border-radius: 8px;">
+                            <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Cek Saldo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 0;">
+                    <button type="button" class="btn-topup" id="btn-manual-sync-trxs" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: #a5b4fc; width: 100%; justify-content: center; height: 42px; font-size: 12px; font-weight: 700; border-radius: 12px;">
+                        <i data-lucide="rotate-cw" style="width: 15px; height: 15px;"></i> Sinkronkan Status Riwayat Transaksi
+                    </button>
+                </div>
+
+                <div class="checkout-divider" style="margin: 4px 0;"></div>
+
+                <!-- Change Password Form -->
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label class="input-label" style="color: #fbbf24; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="lock" style="width: 14px; height: 14px;"></i> Ganti Password Keamanan
+                    </label>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+                        <input type="password" id="settings-old-password" class="input-field" placeholder="Password lama..." style="font-size: 13px; height: 38px;">
+                        <input type="password" id="settings-new-password" class="input-field" placeholder="Password baru..." style="font-size: 13px; height: 38px;">
+                        <input type="password" id="settings-confirm-password" class="input-field" placeholder="Konfirmasi password baru..." style="font-size: 13px; height: 38px;">
+                        <button type="button" class="btn-topup" id="btn-settings-change-password" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #f59e0b; width: 100%; justify-content: center; height: 38px; font-size: 12px; font-weight: 700; border-radius: 12px;">
+                            <i data-lucide="key" style="width: 14px; height: 14px;"></i> Update Password
+                        </button>
+                    </div>
+                </div>
+
+                <div class="checkout-divider" style="margin: 4px 0;"></div>
+
+                <button class="btn-action" id="btn-save-settings" style="margin-top: 8px; background: var(--primary-gradient); height: 46px; font-weight: 700; border-radius: 12px; font-size: 13px;">
+                    <i data-lucide="save" style="width: 18px; height: 18px;"></i>
+                    Simpan Setelan
+                </button>
+
+                <div class="checkout-divider" style="margin: 14px 0 8px 0;"></div>
+                <div style="display: flex; justify-content: center; gap: 8px; font-size: 11px; flex-wrap: wrap;">
+                    <a href="#" id="link-faq-settings" style="color: var(--primary); text-decoration: none; font-weight: 500;">FAQ</a>
+                    <span>•</span>
+                    <a href="#" id="link-terms-settings" style="color: var(--primary); text-decoration: none; font-weight: 500;">Syarat & Ketentuan</a>
+                    <span>•</span>
+                    <a href="#" id="link-refund-settings" style="color: var(--primary); text-decoration: none; font-weight: 500;">Kebijakan Refund</a>
+                    <span>•</span>
+                    <a href="#" id="link-privacy-settings" style="color: var(--primary); text-decoration: none; font-weight: 500;">Kebijakan Privasi</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Syarat & Ketentuan -->
+    <div class="modal-overlay" id="terms-modal">
+        <div class="modal-container" style="max-width: 500px; max-height: 80vh; overflow-y: auto;">
+            <button class="modal-close" id="btn-close-terms"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+            <h3 class="modal-title" style="margin-bottom: 16px;">Syarat & Ketentuan Jawa Pay</h3>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; text-align: justify;">
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-main);">1. Pendahuluan</p>
+                <p style="margin-bottom: 12px;">Selamat datang di Jawa Pay. Dengan menggunakan situs dan layanan kami, Anda menyetujui ketentuan penggunaan ini secara penuh. Jika Anda keberatan dengan ketentuan di halaman ini, harap tidak menggunakan platform kami.</p>
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-main);">2. Layanan Kami</p>
+                <p style="margin-bottom: 12px;">Jawa Pay menyediakan platform keagenan digital untuk pengisian pulsa, paket data internet, token listrik PLN, dan produk digital prabayar lainnya. Kami berhak mengubah harga produk sewaktu-waktu sesuai dengan penyesuaian pasar atau server mitra.</p>
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-main);">3. Akun dan Keamanan</p>
+                <p style="margin-bottom: 12px;">Anda bertanggung jawab penuh untuk menjaga kerahasiaan kata sandi akun Jawa Pay Anda. Segala penyalahgunaan akun atau transaksi yang diakibatkan kelalaian pengguna adalah tanggung jawab pribadi masing-masing.</p>
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-main);">4. Transaksi dan Pembayaran</p>
+                <p style="margin-bottom: 12px;">Pembayaran top-up saldo agen dilakukan menggunakan QRIS atau transfer bank resmi melalui sistem payment gateway terintegrasi. Semua transaksi yang sudah sukses diproses tidak dapat dibatalkan atau direfund, kecuali terbukti ada kesalahan sistem.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 6: Kebijakan Privasi -->
+    <div class="modal-overlay" id="privacy-modal">
+        <div class="modal-container" style="max-width: 500px; max-height: 80vh; overflow-y: auto;">
+            <button class="modal-close" id="btn-close-privacy"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+            <h3 class="modal-title" style="margin-bottom: 16px;">Kebijakan Privasi Jawa Pay</h3>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; text-align: justify;">
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-main);">1. Perlindungan Data</p>
+                <p style="margin-bottom: 12px;">Kami berkomitmen menjaga kerahasiaan data pribadi pengguna, termasuk nama, nomor telepon, username, serta data transaksi. Kami tidak akan menjual atau membagikan data Anda kepada pihak ketiga mana pun tanpa persetujuan Anda.</p>
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-main);">2. Penggunaan Data</p>
+                <p style="margin-bottom: 12px;">Data Anda kami gunakan untuk keperluan autentikasi akun, memproses transaksi digital, mempermudah pelacakan pembayaran, serta mendukung penyelesaian kendala teknis.</p>
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-main);">3. Keamanan</p>
+                <p style="margin-bottom: 12px;">Kami menerapkan pengamanan berstandar industri dengan teknologi hashing password satu arah untuk melindungi data autentikasi Anda dari akses yang tidak sah.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 7: FAQ -->
+    <div class="modal-overlay" id="faq-modal">
+        <div class="modal-container" style="max-width: 500px; max-height: 80vh; overflow-y: auto;">
+            <button class="modal-close" id="btn-close-faq"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+            <h3 class="modal-title" style="margin-bottom: 16px;">Tanya Jawab (FAQ) Jawa Pay</h3>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                <p style="margin-bottom: 4px; font-weight: 700; color: white;">Q: Apa itu Jawa Pay?</p>
+                <p style="margin-bottom: 12px;">A: Jawa Pay adalah platform penyedia layanan isi ulang pulsa, kuota internet, token PLN, dan PPOB terlengkap secara otomatis dengan sistem H2H supplier terpercaya.</p>
+                
+                <p style="margin-bottom: 4px; font-weight: 700; color: white;">Q: Bagaimana cara menjadi agen Jawa Pay?</p>
+                <p style="margin-bottom: 12px;">A: Anda cukup mengeklik tombol "Daftar Jadi Agen" di halaman depan, mengisi data diri, dan memverifikasi kode OTP yang dikirim ke email Anda.</p>
+                
+                <p style="margin-bottom: 4px; font-weight: 700; color: white;">Q: Bagaimana metode pengisian saldo?</p>
+                <p style="margin-bottom: 12px;">A: Pengisian saldo deposit dapat dilakukan secara otomatis melalui scan QRIS 24 jam nonstop atau transfer bank manual (BCA, Mandiri, BRI) yang diverifikasi oleh admin.</p>
+                
+                <p style="margin-bottom: 4px; font-weight: 700; color: white;">Q: Berapa lama saldo masuk setelah pembayaran?</p>
+                <p style="margin-bottom: 12px;">A: Untuk pembayaran QRIS saldo masuk otomatis dalam 1-5 menit. Untuk transfer bank manual saldo diproses setelah admin memverifikasi mutasi bank Anda.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 8: Kebijakan Refund -->
+    <div class="modal-overlay" id="refund-modal">
+        <div class="modal-container" style="max-width: 500px; max-height: 80vh; overflow-y: auto;">
+            <button class="modal-close" id="btn-close-refund"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+            <h3 class="modal-title" style="margin-bottom: 16px;">Kebijakan Refund (Refund Policy)</h3>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; text-align: justify;">
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-main);">1. Transaksi Gagal</p>
+                <p style="margin-bottom: 12px;">Apabila transaksi pembelian produk digital Anda (pulsa, kuota, token) dinyatakan gagal oleh sistem kami atau server supplier, saldo akun Jawa Pay Anda akan secara otomatis dikembalikan penuh (100% refund ke saldo akun) dalam hitungan detik secara otomatis.</p>
+                
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-main);">2. Penarikan Saldo (Withdrawal)</p>
+                <p style="margin-bottom: 12px;">Saldo yang telah didepositkan ke akun Jawa Pay tidak dapat diuangkan kembali atau ditarik ke rekening bank pribadi Anda, kecuali jika platform kami menghentikan layanannya secara permanen.</p>
+                
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-main);">3. Kesalahan Input Nomor Tujuan</p>
+                <p style="margin-bottom: 12px;">Kami tidak bertanggung jawab atas kegagalan transaksi atau salah sasaran pengisian yang disebabkan oleh kesalahan input nomor tujuan oleh agen. Transaksi yang sukses ke nomor yang salah tidak dapat di-refund.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 9: Hubungi Kami -->
+    <div class="modal-overlay" id="contact-modal">
+        <div class="modal-container" style="max-width: 500px; max-height: 80vh; overflow-y: auto;">
+            <button class="modal-close" id="btn-close-contact"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
+            <h3 class="modal-title" style="margin-bottom: 16px;">Hubungi Kami</h3>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                <p style="margin-bottom: 12px;">Jika Anda memiliki kendala transaksi, pendaftaran, atau memerlukan bantuan penyesuaian bisnis, silakan hubungi tim layanan pelanggan kami melalui detail di bawah ini:</p>
+                
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 12px; border: 1px solid var(--card-border); display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <i data-lucide="map-pin" style="width: 18px; height: 18px; color: #a855f7; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div>
+                            <p style="font-weight: 700; color: white;">Alamat Kantor Usaha:</p>
+                            <p style="color: var(--text-secondary);">Jalan Kb Anggrek Atas No. 15, RT 01 / RW 02, Tanah Sareal, Bogor, Jawa Barat 16161</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <i data-lucide="mail" style="width: 18px; height: 18px; color: #a855f7; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div>
+                            <p style="font-weight: 700; color: white;">Email Dukungan:</p>
+                            <p><a href="mailto:admin@jawapay.my.id" style="color: #38bdf8; text-decoration: none;">admin@jawapay.my.id</a></p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <i data-lucide="message-circle" style="width: 18px; height: 18px; color: #a855f7; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div>
+                            <p style="font-weight: 700; color: white;">WhatsApp Customer Service:</p>
+                            <p><a href="https://wa.me/6282334708033" id="contact-wa-link-modal" target="_blank" style="color: #38bdf8; text-decoration: none;">+62 823-3470-8033</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=3.6"></script>
+    <script>
+        // Trigger lucide icon compilation
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+            
+            // Listen for product selections and hide placeholder empty state
+            const targetIn = document.getElementById('target-number');
+            const checkoutBox = document.getElementById('checkout-box');
+            const emptyBox = document.getElementById('checkout-empty-state');
+            
+            // Sync UI placeholders on product click
+            const productsGrid = document.getElementById('products-grid');
+            if (productsGrid) {
+                productsGrid.addEventListener('click', () => {
+                    setTimeout(() => {
+                        const isSelected = checkoutBox.style.display !== 'none';
+                        emptyBox.style.display = isSelected ? 'none' : 'flex';
+                    }, 50);
+                });
+            }
+            
+            // Sync categories switches to reset order checkout summary
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (checkoutBox) checkoutBox.style.display = 'none';
+                    if (emptyBox) emptyBox.style.display = 'flex';
+                });
+            });
+        });
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('[PWA] Service Worker registered successfully:', reg.scope))
+                    .catch(err => console.error('[PWA] Service Worker registration failed:', err));
+            });
+        }
+    </script>
+
+    <!-- WhatsApp Floating CS Widget -->
+    <a href="https://wa.me/6282334708033" target="_blank" class="whatsapp-widget" id="whatsapp-cs-link" title="Hubungi CS WhatsApp">
+        <i data-lucide="message-circle"></i>
+    </a>
+</body>
+</html>

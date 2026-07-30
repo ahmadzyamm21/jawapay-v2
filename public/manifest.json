@@ -1,0 +1,51 @@
+{
+  "name": "Jawa Pay - Agen Pulsa & PPOB",
+  "short_name": "Jawa Pay",
+  "description": "Platform Keagenan Digital Pengisian Pulsa, Paket Data, dan Token PLN Terpercaya",
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#0d0e15",
+  "theme_color": "#6366f1",
+  "orientation": "portrait",
+  "categories": [
+    "business",
+    "finance",
+    "shopping"
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/jawapay_hero.png",
+      "sizes": "1024x1024",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Halaman Utama Jawa Pay"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+node_modules/
+.env
+database/
+*.db
+*.sqlite
+check_balance.js
+test_digiflazz.js
+find_fallback.js
+test_pricelist.js

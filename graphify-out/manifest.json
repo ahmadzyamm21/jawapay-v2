@@ -1,0 +1,117 @@
+{
+  "android/app/build.gradle": {
+    "mtime": 1784907411.114859,
+    "ast_hash": "fcb6f3a1bbf3a23bdd7fcc339270dd1a",
+    "semantic_hash": "fcb6f3a1bbf3a23bdd7fcc339270dd1a"
+  },
+  "android/app/capacitor.build.gradle": {
+    "mtime": 1784909169.5407784,
+    "ast_hash": "b863e425fbde80251bd3c68ac8ccba02",
+    "semantic_hash": "b863e425fbde80251bd3c68ac8ccba02"
+  },
+  "android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java": {
+    "mtime": 1784050294.0,
+    "ast_hash": "fbaf7cc870c663eb52dcf218531c439d",
+    "semantic_hash": "fbaf7cc870c663eb52dcf218531c439d"
+  },
+  "android/app/src/main/java/com/jawapay/app/MainActivity.java": {
+    "mtime": 1784907411.091259,
+    "ast_hash": "2bad00cd6c99d2cd58c122d8466c3e8c",
+    "semantic_hash": "2bad00cd6c99d2cd58c122d8466c3e8c"
+  },
+  "android/app/src/test/java/com/getcapacitor/myapp/ExampleUnitTest.java": {
+    "mtime": 1784050294.0,
+    "ast_hash": "e91b4501c14da821682fa5c26a16d616",
+    "semantic_hash": "e91b4501c14da821682fa5c26a16d616"
+  },
+  "android/build.gradle": {
+    "mtime": 1784050294.0,
+    "ast_hash": "682315a426653617c6a74fc12bef55b6",
+    "semantic_hash": "682315a426653617c6a74fc12bef55b6"
+  },
+  "android/capacitor.settings.gradle": {
+    "mtime": 1784909169.5397813,
+    "ast_hash": "455ebb7f9fe84a6974da6bdae43097c2",
+    "semantic_hash": "455ebb7f9fe84a6974da6bdae43097c2"
+  },
+  "android/gradlew": {
+    "mtime": 1784050294.0,
+    "ast_hash": "794669d78aef1dd5c7d889ef618b311a",
+    "semantic_hash": "794669d78aef1dd5c7d889ef618b311a"
+  },
+  "android/settings.gradle": {
+    "mtime": 1784050294.0,
+    "ast_hash": "f6cd925b3f859e23c3d819fe2459e0e4",
+    "semantic_hash": "f6cd925b3f859e23c3d819fe2459e0e4"
+  },
+  "android/variables.gradle": {
+    "mtime": 1784050294.0,
+    "ast_hash": "4b3fce8ea2a515a9d2e47e74757172ec",
+    "semantic_hash": "4b3fce8ea2a515a9d2e47e74757172ec"
+  },
+  "capacitor.config.json": {
+    "mtime": 1784908768.8208394,
+    "ast_hash": "b68219bf5b59d90979d865cb9fde6795",
+    "semantic_hash": "b68219bf5b59d90979d865cb9fde6795"
+  },
+  "models/Deposit.js": {
+    "mtime": 1784957721.123685,
+    "ast_hash": "f951341d3ba75f7df9ca19d76461263b",
+    "semantic_hash": "f951341d3ba75f7df9ca19d76461263b"
+  },
+  "models/Setting.js": {
+    "mtime": 1784867217.669566,
+    "ast_hash": "984310dd5bd82510d14d813f720759a9",
+    "semantic_hash": "984310dd5bd82510d14d813f720759a9"
+  },
+  "models/Transaction.js": {
+    "mtime": 1784220959.4963243,
+    "ast_hash": "4ca0d5128e9c3bd88ad813d5d2f3962f",
+    "semantic_hash": "4ca0d5128e9c3bd88ad813d5d2f3962f"
+  },
+  "models/User.js": {
+    "mtime": 1784947835.9390812,
+    "ast_hash": "21e06cf596a117192be34eca9cd079f1",
+    "semantic_hash": "21e06cf596a117192be34eca9cd079f1"
+  },
+  "models/Voucher.js": {
+    "mtime": 1784220947.2575424,
+    "ast_hash": "7f3908b3105efa45cace27c661f2c152",
+    "semantic_hash": "7f3908b3105efa45cace27c661f2c152"
+  },
+  "models/index.js": {
+    "mtime": 1784947839.9754965,
+    "ast_hash": "443326c66bb6d34214f23b05d07894e2",
+    "semantic_hash": "443326c66bb6d34214f23b05d07894e2"
+  },
+  "package.json": {
+    "mtime": 1784907287.6350894,
+    "ast_hash": "76e68ef30f17a081494a9c93e9c4e804",
+    "semantic_hash": "76e68ef30f17a081494a9c93e9c4e804"
+  },
+  "public/.well-known/assetlinks.json": {
+    "mtime": 1784346326.3723447,
+    "ast_hash": "4cfefcecc095b15d54f1d99897f786c9",
+    "semantic_hash": "4cfefcecc095b15d54f1d99897f786c9"
+  },
+  "public/app.js": {
+    "mtime": 1785060314.8253877,
+    "ast_hash": "b08da4c2bb6c7ad8aa837343ee0254f9",
+    "semantic_hash": "b08da4c2bb6c7ad8aa837343ee0254f9"
+  },
+  "public/manifest.json": {
+    "mtime": 1784345270.9153843,
+    "ast_hash": "32fbaa2fb6446fafadc341dd8773a36a",
+    "semantic_hash": "32fbaa2fb6446fafadc341dd8773a36a"
+  },
+  "public/sw.js": {
+    "mtime": 1784907109.227634,
+    "ast_hash": "7c94a98bc83d5a31e2c827232a6865e6",
+    "semantic_hash": "7c94a98bc83d5a31e2c827232a6865e6"
+  },
+  "server.js": {
+    "mtime": 1785085485.1347318,
+    "ast_hash": "73a48e0835b9d5c20d94e7aeede5d34f",
+    "semantic_hash": "73a48e0835b9d5c20d94e7aeede5d34f"
+  }
+}

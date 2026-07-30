@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.onrender.jawa_pay.twa",
+      "sha256_cert_fingerprints": [
+        "0E:6D:58:37:B4:CF:9D:D3:B9:12:8E:6C:E1:CE:A8:66:27:D8:2E:69:01:9E:88:5F:90:34:22:8F:78:D2:3B:BE"
+      ]
+    }
+  }
+]

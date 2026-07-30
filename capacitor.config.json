@@ -1,0 +1,11 @@
+{
+  "appId": "com.jawapay.app",
+  "appName": "Jawa Pay",
+  "webDir": "public",
+  "android": {
+    "backgroundColor": "#0a0814",
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  }
+}
