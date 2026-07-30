@@ -442,13 +442,15 @@ const otpLimiter = rateLimit({
     message: {
         error: 'Terlalu banyak permintaan OTP. Coba lagi nanti.'
     }
-});
-const authRoutes = createAuthRoutes({
+});const authRoutes = createAuthRoutes({
     User,
     jwt,
     JWT_SECRET,
-    otpLimiter
+    otpLimiter,
+    sendOtpEmail
 });
+
+app.use('/api/auth', authRoutes);
 
 app.use('/api/auth', authRoutes);
 // ---------------- AUTENTIKASI ROUTES ----------------
