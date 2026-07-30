@@ -444,227 +444,22 @@ const otpLimiter = rateLimit({
     }
 });const authRoutes = createAuthRoutes({
     User,
+    Transaction,
     jwt,
     JWT_SECRET,
-    otpLimiter,
-    sendOtpEmail
+    hashPassword,
+    sendOtpEmail,
+    axios,
+    calculateMD5,
+    DIGIFLAZZ_USERNAME,
+    DIGIFLAZZ_API_KEY,
+    DIGIFLAZZ_BASE_URL,
+    authenticateToken,
+    loginLimiter,
+    otpLimiter
 });
 
 app.use('/api/auth', authRoutes);
-
-app.use('/api/auth', authRoutes);
-// ---------------- AUTENTIKASI ROUTES ----------------
-
-// Register (Initiates 6-Digit Email OTP Verification)
-app.post('/api/auth/register', async (req, res) => {
-    const { name, username, password, email } = req.body;
-
-    if (!name || !username || !password || !email) {
-        return res.status(400).json({ error: 'Data registrasi tidak lengkap.' });
-    }
-
-    try {
-        const usernameExists = await User.findOne({ where: { username: username.toLowerCase() } });
-        if (usernameExists) {
-            return res.status(400).json({ error: 'Username sudah digunakan oleh agen lain.' });
-        }
-
-        const emailExists = await User.findOne({ where: { email: email.toLowerCase() } });
-        if (emailExists) {
-            return res.status(400).json({ error: 'Email sudah digunakan oleh agen lain.' });
-        }
-
-        // Generate 6-digit numeric OTP code and 10-minute expiration
-        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-        const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
-
-        const newUser = await User.create({
-            id: 'USR' + Math.floor(Math.random() * 9000 + 1000),
-            name: name,
-            username: username.toLowerCase(),
-            password: hashPassword(password),
-            email: email.toLowerCase(),
-            balance: 0,
-            isVerified: false,
-            otpCode: otpCode,
-            otpExpires: otpExpires
-        });
-
-        console.log(`[Database SQL] User baru terdaftar (menunggu OTP): ${username} (${newUser.id}) | OTP: ${otpCode}`);
-
-        // Dispatch OTP Email asynchronously in background (non-blocking for instant <50ms HTTP response)
-        sendOtpEmail(email.toLowerCase(), name, otpCode).catch(mailErr => {
-            console.error('[Email OTP Error] Gagal mengirim OTP email:', mailErr.message || mailErr);
-        });
-
-        const showDebugOtp = !process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.DEBUG_OTP === 'true';
-
-        res.json({
-            success: true,
-            requireOtp: true,
-            email: email.toLowerCase(),
-            ...(showDebugOtp ? { debugOtp: otpCode } : {}),
-            message: 'Registrasi berhasil! Kode OTP 6-digit telah dikirim ke email Anda.'
-        });
-    } catch (err) {
-        console.error('Register database error:', err);
-        res.status(500).json({ error: 'Gagal melakukan registrasi ke database.' });
-    }
-});
-
-// Verify 6-Digit Email OTP
-
-// Resend OTP Code
-app.post('/api/auth/resend-otp', otpLimiter, async (req, res) => {
-    const { email } = req.body;
-
-    if (!email) {
-        return res.status(400).json({ error: 'Alamat email wajib diisi.' });
-    }
-
-    try {
-        const user = await User.findOne({ where: { email: email.toLowerCase() } });
-        if (!user) {
-            return res.status(404).json({ error: 'Akun dengan email tersebut tidak ditemukan.' });
-        }
-
-        const newOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
-        user.otpCode = newOtpCode;
-        user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
-        await user.save();
-
-        console.log(`[Email OTP] Resending OTP ${newOtpCode} to ${email}`);
-        sendOtpEmail(user.email, user.name, newOtpCode).catch(mailErr => {
-            console.error('[Email OTP Error] Resend failed:', mailErr.message || mailErr);
-        });
-
-        const showDebugOtp = !process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.DEBUG_OTP === 'true';
-
-        res.json({
-            success: true,
-            ...(showDebugOtp ? { debugOtp: newOtpCode } : {}),
-            message: 'Kode OTP 6-digit baru telah dikirimkan ke email Anda.'
-        });
-    } catch (err) {
-        console.error('Resend OTP Error:', err);
-        res.status(500).json({ error: 'Gagal mengirim ulang Kode OTP.' });
-    }
-});
-// Login
-app.post('/api/auth/login', loginLimiter, async (req, res) => {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ error: 'Username dan password wajib diisi.' });
-    }
-
-    try {
-        const user = await User.findOne({ where: { username: username.toLowerCase() } });
-        if (!user || user.password !== hashPassword(password)) {
-            return res.status(400).json({ error: 'Username atau password Anda salah.' });
-        }
-
-        if (!user.isVerified) {
-            return res.status(400).json({
-                error: 'Akun Anda belum diverifikasi.',
-                requireOtp: true,
-                email: user.email
-            });
-        }
-
-        const token = jwt.sign(
-            { id: user.id, username: user.username, name: user.name, role: user.role },
-            JWT_SECRET,
-            { expiresIn: '24h' }
-        );
-
-        res.json({
-            success: true,
-            token: token,
-            user: { id: user.id, name: user.name, username: user.username, markupFlat: user.markupFlat, role: user.role }
-        });
-    } catch (err) {
-        console.error('Login database error:', err);
-        res.status(500).json({ error: 'Gagal memverifikasi login.' });
-    }
-});
-
-// Get User Profile & Transaction History
-app.get('/api/auth/profile', authenticateToken, async (req, res) => {
-    try {
-        const user = await User.findByPk(req.user.id, {
-            include: [{
-                model: Transaction,
-                as: 'transactions'
-            }],
-            order: [[{ model: Transaction, as: 'transactions' }, 'createdAt', 'DESC']]
-        });
-        if (!user) return res.status(404).json({ error: 'Pengguna tidak ditemukan.' });
-
-        let displayBalance = user.balance;
-        if (user.role === 'admin' && DIGIFLAZZ_USERNAME && DIGIFLAZZ_API_KEY) {
-            try {
-                const sign = calculateMD5(DIGIFLAZZ_USERNAME + DIGIFLAZZ_API_KEY + 'depo');
-                const response = await axios.post(`${DIGIFLAZZ_BASE_URL}/cek-saldo`, {
-                    cmd: 'deposit',
-                    username: DIGIFLAZZ_USERNAME,
-                    sign: sign
-                }, { timeout: 3500 });
-                if (response.data && response.data.data && typeof response.data.data.deposit === 'number') {
-                    displayBalance = response.data.data.deposit;
-                    if (user.balance !== displayBalance) {
-                        user.balance = displayBalance;
-                        await user.save();
-                    }
-                }
-            } catch (err) {
-                console.error('[Admin Profile Balance Sync] Failed to fetch Digiflazz balance:', err.message);
-            }
-        }
-
-        res.json({
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            balance: displayBalance,
-            markupFlat: user.markupFlat,
-            role: user.role,
-            transactions: user.transactions
-        });
-    } catch (err) {
-        console.error('Get profile database error:', err);
-        res.status(500).json({ error: 'Gagal memuat profil pengguna.' });
-    }
-});
-
-// Change user password (Protected)
-app.post('/api/auth/change-password', authenticateToken, async (req, res) => {
-    const { oldPassword, newPassword } = req.body;
-    if (!oldPassword || !newPassword) {
-        return res.status(400).json({ error: 'Password lama dan password baru wajib diisi.' });
-    }
-    if (newPassword.length < 6) {
-        return res.status(400).json({ error: 'Password baru minimal harus 6 karakter.' });
-    }
-
-    try {
-        const user = await User.findByPk(req.user.id);
-        if (!user) return res.status(404).json({ error: 'Pengguna tidak ditemukan.' });
-
-        if (user.password !== hashPassword(oldPassword)) {
-            return res.status(400).json({ error: 'Password lama yang Anda masukkan salah.' });
-        }
-
-        user.password = hashPassword(newPassword);
-        await user.save();
-
-        console.log(`[Password Change] Agen ${user.username} berhasil mengubah password keamanan.`);
-        res.json({ success: true, message: 'Password keamanan berhasil diperbarui.' });
-    } catch (err) {
-        console.error('Change password error:', err);
-        res.status(500).json({ error: 'Gagal mengubah password.' });
-    }
-});
 
 // ==========================================
 //             ADMIN API ENDPOINTS
@@ -1943,26 +1738,6 @@ app.post('/api/vouchers/validate', authenticateToken, async (req, res) => {
     } catch (err) {
         console.error('Validate voucher error:', err);
         res.status(500).json({ error: 'Gagal memvalidasi voucher.' });
-    }
-});
-
-// Update flat markup (Protected)
-app.post('/api/auth/profile/update-markup', authenticateToken, async (req, res) => {
-    const { markupFlat } = req.body;
-    if (markupFlat === undefined || isNaN(markupFlat) || parseInt(markupFlat) < 0) {
-        return res.status(400).json({ error: 'Nilai markup tidak valid.' });
-    }
-    try {
-        const user = await User.findByPk(req.user.id);
-        if (!user) return res.status(404).json({ error: 'User tidak ditemukan.' });
-        
-        user.markupFlat = parseInt(markupFlat);
-        await user.save();
-              console.log(`[Database SQL] Markup User ${user.username} diperbarui menjadi: Rp ${user.markupFlat}`);
-        res.json({ success: true, markupFlat: user.markupFlat });
-    } catch (err) {
-        console.error('Update profile markup error:', err);
-        res.status(500).json({ error: 'Gagal memperbarui markup.' });
     }
 });
 
