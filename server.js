@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const path = require('path');
 const dns = require('dns');
 const jwt = require('jsonwebtoken');
+const createAuthRoutes = require('./routes/auth');
 require('dotenv').config();
 
 const app = express();
@@ -442,6 +443,14 @@ const otpLimiter = rateLimit({
         error: 'Terlalu banyak permintaan OTP. Coba lagi nanti.'
     }
 });
+const authRoutes = createAuthRoutes({
+    User,
+    jwt,
+    JWT_SECRET,
+    otpLimiter
+});
+
+app.use('/api/auth', authRoutes);
 // ---------------- AUTENTIKASI ROUTES ----------------
 
 // Register (Initiates 6-Digit Email OTP Verification)
@@ -502,67 +511,6 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 // Verify 6-Digit Email OTP
-app.post('/api/auth/verify-otp', otpLimiter, async (req, res) => {
-    const { email, otpCode } = req.body;
-
-    if (!email || !otpCode) {
-        return res.status(400).json({ error: 'Email dan Kode OTP wajib diisi.' });
-    }
-
-    try {
-        const user = await User.findOne({ where: { email: email.toLowerCase() } });
-        if (!user) {
-            return res.status(404).json({ error: 'Akun dengan email tersebut tidak ditemukan.' });
-        }
-
-        if (user.isVerified) {
-            // Already verified, generate token and log in
-            const token = jwt.sign(
-                { id: user.id, username: user.username, name: user.name, role: user.role },
-                JWT_SECRET,
-                { expiresIn: '24h' }
-            );
-            return res.json({
-                success: true,
-                token: token,
-                user: { id: user.id, name: user.name, username: user.username, markupFlat: user.markupFlat, role: user.role }
-            });
-        }
-
-        const cleanOtp = otpCode.toString().trim();
-        if (!user.otpCode || user.otpCode !== cleanOtp) {
-            return res.status(400).json({ error: 'Kode OTP 6-digit salah. Silakan periksa kembali email Anda.' });
-        }
-
-        if (new Date() > new Date(user.otpExpires)) {
-            return res.status(400).json({ error: 'Kode OTP 6-digit telah kedaluwarsa (lebih dari 10 menit). Silakan minta kode baru.' });
-        }
-
-        // Activate account
-        user.isVerified = true;
-        user.otpCode = null;
-        user.otpExpires = null;
-        await user.save();
-
-        console.log(`[Email OTP] Akun ${user.username} (${user.email}) berhasil diverifikasi via OTP!`);
-
-        const token = jwt.sign(
-            { id: user.id, username: user.username, name: user.name, role: user.role },
-            JWT_SECRET,
-            { expiresIn: '24h' }
-        );
-
-        res.json({
-            success: true,
-            message: 'Verifikasi Kode OTP Berhasil! Selamat datang di Jawa Pay.',
-            token: token,
-            user: { id: user.id, name: user.name, username: user.username, markupFlat: user.markupFlat, role: user.role }
-        });
-    } catch (err) {
-        console.error('Verify OTP Error:', err);
-        res.status(500).json({ error: 'Gagal memverifikasi Kode OTP.' });
-    }
-});
 
 // Resend OTP Code
 app.post('/api/auth/resend-otp', otpLimiter, async (req, res) => {
