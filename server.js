@@ -8,6 +8,7 @@ const path = require('path');
 const dns = require('dns');
 const jwt = require('jsonwebtoken');
 const createAuthRoutes = require('./routes/auth');
+const createDepositRoutes = require('./routes/deposit');
 require('dotenv').config();
 
 const app = express();
@@ -461,6 +462,14 @@ const otpLimiter = rateLimit({
 
 app.use('/api/auth', authRoutes);
 
+const depositRoutes = createDepositRoutes({
+    User,
+    Deposit,
+    snap,
+    authenticateToken
+});
+app.use('/api/deposits', depositRoutes);
+
 // ==========================================
 //             ADMIN API ENDPOINTS
 // ==========================================
@@ -774,209 +783,8 @@ app.put('/api/admin/announcement', authenticateAdmin, async (req, res) => {
 });
 
 // ==========================================
-//           DEPOSIT TIKET MANUAL API
+//           DEPOSIT API ROUTES
 // ==========================================
-
-// Request manual bank transfer deposit ticket (Protected Agent)
-app.post('/api/deposits/request', authenticateToken, async (req, res) => {
-    const { amount, bankName } = req.body;
-    const userId = req.user.id;
-
-    if (!amount || isNaN(amount) || parseInt(amount) < 2000) {
-        return res.status(400).json({ error: 'Minimal deposit adalah Rp 2.000.' });
-    }
-    if (!bankName || !['BCA', 'MANDIRI', 'BRI'].includes(bankName.toUpperCase().trim())) {
-        return res.status(400).json({ error: 'Metode bank transfer tidak didukung.' });
-    }
-
-    try {
-        // Check if user already has a pending request
-        const existingPending = await Deposit.findOne({
-            where: { userId: userId, status: 'Pending' }
-        });
-        if (existingPending) {
-            return res.status(400).json({ 
-                error: 'Anda memiliki tiket deposit pending yang belum diselesaikan.',
-                deposit: existingPending
-            });
-        }
-
-        // Generate a random 3-digit unique code (100 - 999)
-        // Ensure no other pending deposit has the exact same total amount to avoid bank mutation matching confusion
-        let uniqueCode;
-        let totalAmount;
-        let isUnique = false;
-        let retries = 0;
-
-        while (!isUnique && retries < 15) {
-            uniqueCode = Math.floor(100 + Math.random() * 900);
-            totalAmount = parseInt(amount) + uniqueCode;
-
-            const duplicate = await Deposit.findOne({
-                where: { totalAmount: totalAmount, status: 'Pending' }
-            });
-            if (!duplicate) {
-                isUnique = true;
-            }
-            retries++;
-        }
-
-        const depositId = 'DEP' + Date.now();
-        const deposit = await Deposit.create({
-            id: depositId,
-            userId: userId,
-            amount: parseInt(amount),
-            uniqueCode: uniqueCode,
-            totalAmount: totalAmount,
-            bankName: bankName.toUpperCase().trim(),
-            status: 'Pending'
-        });
-
-        console.log(`[Deposit Request] Agen ${req.user.username} mengajukan deposit ${totalAmount} (ID: ${depositId})`);
-
-        res.json({
-            success: true,
-            deposit,
-            bankAccounts: {
-                ...(process.env.BANK_BCA_NUMBER ? { BCA: { number: process.env.BANK_BCA_NUMBER, owner: process.env.BANK_BCA_OWNER || 'Admin' } } : {}),
-                ...(process.env.BANK_MANDIRI_NUMBER ? { MANDIRI: { number: process.env.BANK_MANDIRI_NUMBER, owner: process.env.BANK_MANDIRI_OWNER || 'Admin' } } : {}),
-                ...(process.env.BANK_BRI_NUMBER ? { BRI: { number: process.env.BANK_BRI_NUMBER, owner: process.env.BANK_BRI_OWNER || 'Admin' } } : {})
-            }
-        });
-    } catch (err) {
-        console.error('Request deposit error:', err);
-        res.status(500).json({ error: 'Gagal membuat tiket deposit.' });
-    }
-});
-
-// Request Midtrans Deposit (Protected Agent)
-app.post('/api/deposits/request-midtrans', authenticateToken, async (req, res) => {
-    const { amount } = req.body;
-    const userId = req.user.id;
-
-    if (!amount || isNaN(amount) || parseInt(amount) < 2000) {
-        return res.status(400).json({ error: 'Minimal pengisian deposit adalah Rp 2.000.' });
-    }
-
-    try {
-        const user = await User.findByPk(userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User tidak ditemukan.' });
-        }
-
-        // Check if there is already an active pending Midtrans deposit
-        const existingPending = await Deposit.findOne({
-            where: {
-                userId: userId,
-                bankName: 'MIDTRANS',
-                status: 'Pending'
-            }
-        });
-
-        if (existingPending) {
-            existingPending.status = 'Dibatalkan';
-            await existingPending.save();
-        }
-
-        const depositId = 'DEPMID' + Date.now();
-        const totalAmount = parseInt(amount);
-
-        // Call Midtrans Snap to create a transaction
-        const parameter = {
-            transaction_details: {
-                order_id: depositId,
-                gross_amount: totalAmount
-            },
-            credit_card: {
-                secure: true
-            },
-            customer_details: {
-                first_name: user.name,
-                email: user.username + '@jawapay.my.id',
-                phone: user.phone || '081234567890'
-            },
-            item_details: [{
-                id: 'DEPOSIT',
-                price: totalAmount,
-                quantity: 1,
-                name: 'Top Up Saldo Jawa Pay'
-            }]
-        };
-
-        const transaction = await snap.createTransaction(parameter);
-        
-        // Save the pending deposit in database
-        const deposit = await Deposit.create({
-            id: depositId,
-            userId: userId,
-            bankName: 'MIDTRANS',
-            amount: totalAmount,
-            uniqueCode: 0,
-            totalAmount: totalAmount,
-            status: 'Pending',
-            qrUrl: transaction.redirect_url
-        });
-
-        console.log(`[Midtrans Deposit Request] Agen ${user.username} mengajukan deposit Midtrans ${totalAmount} (ID: ${depositId})`);
-
-        res.json({
-            success: true,
-            deposit,
-            token: transaction.token,
-            redirect_url: transaction.redirect_url
-        });
-    } catch (error) {
-        console.error('Error Midtrans Deposit Snap create:', error);
-        res.status(500).json({ error: 'Gagal memproses tiket deposit Midtrans.', message: error.message });
-    }
-});
-
-// Get agent's active pending deposits (Protected Agent)
-app.get('/api/deposits/my-requests', authenticateToken, async (req, res) => {
-    try {
-        const deposits = await Deposit.findAll({
-            where: { userId: req.user.id },
-            order: [['createdAt', 'DESC']]
-        });
-        res.json({
-            success: true,
-            deposits,
-            bankAccounts: {
-                ...(process.env.BANK_BCA_NUMBER ? { BCA: { number: process.env.BANK_BCA_NUMBER, owner: process.env.BANK_BCA_OWNER || 'Admin' } } : {}),
-                ...(process.env.BANK_MANDIRI_NUMBER ? { MANDIRI: { number: process.env.BANK_MANDIRI_NUMBER, owner: process.env.BANK_MANDIRI_OWNER || 'Admin' } } : {}),
-                ...(process.env.BANK_BRI_NUMBER ? { BRI: { number: process.env.BANK_BRI_NUMBER, owner: process.env.BANK_BRI_OWNER || 'Admin' } } : {})
-            }
-        });
-    } catch (err) {
-        console.error('Get my deposits error:', err);
-        res.status(500).json({ error: 'Gagal memuat tiket deposit Anda.' });
-    }
-});
-
-// Cancel deposit request by Agent (Protected Agent)
-app.post('/api/deposits/:id/cancel', authenticateToken, async (req, res) => {
-    const depositId = req.params.id;
-
-    try {
-        const deposit = await Deposit.findOne({
-            where: { id: depositId, userId: req.user.id }
-        });
-        if (!deposit) return res.status(404).json({ error: 'Tiket deposit tidak ditemukan.' });
-
-        if (deposit.status !== 'Pending') {
-            return res.status(400).json({ error: 'Tiket deposit tidak berstatus pending.' });
-        }
-
-        deposit.status = 'Batal';
-        await deposit.save();
-
-        console.log(`[Deposit Cancel] Agen ${req.user.username} membatalkan tiket deposit ${depositId}`);
-        res.json({ success: true, message: 'Tiket deposit berhasil dibatalkan.' });
-    } catch (err) {
-        console.error('Cancel deposit error:', err);
-        res.status(500).json({ error: 'Gagal membatalkan tiket deposit.' });
-    }
-});
 
 // Tripay Configuration
 const TRIPAY_API_KEY = process.env.TRIPAY_API_KEY;
