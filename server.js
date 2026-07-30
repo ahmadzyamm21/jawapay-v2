@@ -1,6 +1,6 @@
+const applySecurityMiddleware = require('./middleware/security');
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const axios = require('axios');
 const crypto = require('crypto');
@@ -10,13 +10,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
-app.disable('x-powered-by');
 
-app.use(
-    helmet({
-        contentSecurityPolicy: false
-    })
-);
+applySecurityMiddleware(app);
 const PORT = process.env.PORT || 8000;
 const developmentOnly = (req, res, next) => {
     if (process.env.NODE_ENV === 'production') {
