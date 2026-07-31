@@ -1,6 +1,7 @@
 const express = require('express');
 const createTransactionController = require('../controllers/transactionController');
 const createTransactionService = require('../services/transactionService');
+const createDigiflazzService = require('../services/digiflazzService');
 
 function createTransactionRoutes({
     Transaction,
@@ -27,18 +28,22 @@ function createTransactionRoutes({
     }
 
     const router = express.Router();
+    const digiflazzService = createDigiflazzService({
+        axios,
+        calculateMD5,
+        DIGIFLAZZ_USERNAME,
+        DIGIFLAZZ_API_KEY,
+        DIGIFLAZZ_BASE_URL,
+        isDigiflazzMock
+    });
+
     const transactionService = createTransactionService({
         Transaction,
         User,
         Voucher,
         sequelize,
         findProductBySku,
-        isDigiflazzMock,
-        DIGIFLAZZ_USERNAME,
-        DIGIFLAZZ_API_KEY,
-        DIGIFLAZZ_BASE_URL,
-        calculateMD5,
-        axios
+        digiflazzService
     });
 
     const controller = createTransactionController({ Transaction, User, handleFailedTransactionRefund, transactionService });
