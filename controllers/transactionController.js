@@ -3,7 +3,8 @@ const createTransactionService = require('../services/transactionService');
 function createTransactionController({
     Transaction,
     User,
-    handleFailedTransactionRefund
+    handleFailedTransactionRefund,
+    transactionService: injectedTransactionService
 }) {
     if (!Transaction || !User) {
         throw new Error('Transaction controller membutuhkan model Transaction dan User.');
@@ -13,7 +14,52 @@ function createTransactionController({
         throw new Error('Transaction controller membutuhkan handleFailedTransactionRefund.');
     }
 
-    const transactionService = createTransactionService({ Transaction, User });
+    const transactionService = injectedTransactionService || createTransactionService({ Transaction, User });
+
+    async function createPurchaseTransaction(req, res) {
+        const { buyer_sku_code, customer_no, ref_id, voucherCode } = req.body;
+        const userId = req.user && req.user.id;
+
+        if (!buyer_sku_code || !customer_no || !ref_id) {
+            return res.status(400).json({ error: 'Parameter tidak lengkap.' });
+        }
+
+        try {
+            const result = await transactionService.createPurchaseTransaction({
+                userId,
+                buyer_sku_code,
+                customer_no,
+                ref_id,
+                voucherCode
+            });
+
+            return res.json({
+                data: {
+                    ref_id: ref_id,
+                    trx_id: result.newTrx.id,
+                    buyer_sku_code: buyer_sku_code,
+                    customer_no: customer_no,
+                    price: result.productCost,
+                    status: result.newTrx.status,
+                    sn: result.newTrx.sn
+                }
+            });
+        } catch (error) {
+            let errMsg = error.message;
+            if (error.response && error.response.data) {
+                const respData = error.response.data;
+                if (respData.data && respData.data.message) {
+                    errMsg = respData.data.message;
+                } else if (respData.message) {
+                    errMsg = respData.message;
+                }
+            }
+
+            if (error.message === 'USER_NOT_FOUND') return res.status(404).json({ error: 'User tidak ditemukan.' });
+            if (error.message === 'INSUFFICIENT_BALANCE') return res.status(400).json({ error: 'Saldo Agen tidak mencukupi.' });
+            res.status(400).json({ error: 'Transaksi ditolak.', details: errMsg });
+        }
+    }
 
     async function getAdminTransactions(req, res) {
         try {
@@ -100,6 +146,8 @@ function createTransactionController({
         getAdminTransactions,
         updateAdminTransactionStatus,
         syncPendingTransactions
+        ,
+        createPurchaseTransaction
     };
 }
 

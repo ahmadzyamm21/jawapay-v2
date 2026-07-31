@@ -1,9 +1,19 @@
 const express = require('express');
 const createTransactionController = require('../controllers/transactionController');
+const createTransactionService = require('../services/transactionService');
 
 function createTransactionRoutes({
     Transaction,
     User,
+    Voucher,
+    sequelize,
+    findProductBySku,
+    isDigiflazzMock,
+    DIGIFLAZZ_USERNAME,
+    DIGIFLAZZ_API_KEY,
+    DIGIFLAZZ_BASE_URL,
+    calculateMD5,
+    axios,
     authenticateToken,
     authenticateAdmin,
     handleFailedTransactionRefund
@@ -17,11 +27,21 @@ function createTransactionRoutes({
     }
 
     const router = express.Router();
-    const controller = createTransactionController({
+    const transactionService = createTransactionService({
         Transaction,
         User,
-        handleFailedTransactionRefund
+        Voucher,
+        sequelize,
+        findProductBySku,
+        isDigiflazzMock,
+        DIGIFLAZZ_USERNAME,
+        DIGIFLAZZ_API_KEY,
+        DIGIFLAZZ_BASE_URL,
+        calculateMD5,
+        axios
     });
+
+    const controller = createTransactionController({ Transaction, User, handleFailedTransactionRefund, transactionService });
 
     router.get(
         '/admin/transactions',
@@ -39,6 +59,13 @@ function createTransactionRoutes({
         '/transactions/sync',
         authenticateToken,
         controller.syncPendingTransactions
+    );
+
+    // Main purchase endpoint: POST /api/transaction
+    router.post(
+        '/transaction',
+        authenticateToken,
+        controller.createPurchaseTransaction
     );
 
     return router;

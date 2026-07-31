@@ -16,6 +16,19 @@ const app = express();
 
 applySecurityMiddleware(app);
 const PORT = process.env.PORT || 8000;
+// JWT Configuration
+const JWT_SECRET = process.env.JWT_SECRET || 'secretkeypulsaku';
+// Digiflazz Config
+const DIGIFLAZZ_USERNAME = process.env.DIGIFLAZZ_USERNAME;
+const DIGIFLAZZ_API_KEY = process.env.DIGIFLAZZ_API_KEY || '';
+const DIGIFLAZZ_BASE_URL = 'https://api.digiflazz.com/v1';
+// Midtrans Config
+const midtransClient = require('midtrans-client');
+const snap = new midtransClient.Snap({
+    isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
+    serverKey: process.env.MIDTRANS_SERVER_KEY,
+    clientKey: process.env.MIDTRANS_CLIENT_KEY
+});
 const developmentOnly = (req, res, next) => {
     if (process.env.NODE_ENV === 'production') {
         return res.status(404).json({
@@ -33,191 +46,7 @@ const { User, Transaction, Voucher, Setting, Deposit, sequelize } = db;
 app.use(cors());
 app.use(express.json());
 
-// Serve static frontend files
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Explicitly serve assetlinks.json for Android TWA verification
-app.get('/.well-known/assetlinks.json', (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.sendFile(path.join(__dirname, 'public', '.well-known', 'assetlinks.json'));
-});
-
-// Digiflazz Config
-const DIGIFLAZZ_USERNAME = process.env.DIGIFLAZZ_USERNAME;
-const DIGIFLAZZ_API_KEY = process.env.DIGIFLAZZ_API_KEY;
-const DIGIFLAZZ_BASE_URL = 'https://api.digiflazz.com/v1';
-
-// Midtrans Config
-const midtransClient = require('midtrans-client');
-const snap = new midtransClient.Snap({
-    isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
-    serverKey: process.env.MIDTRANS_SERVER_KEY,
-    clientKey: process.env.MIDTRANS_CLIENT_KEY
-});
-
-// JWT Configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'secretkeypulsaku';
-
-// In-Memory Invoice User Map (merchantRef -> userId)
-const invoiceUserMap = new Map();
-
-// In-Memory Cache for Digiflazz Product Catalog
-let cachedProducts = null;
-let lastCacheTime = 0;
-const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
-
-const FALLBACK_PRODUCTS = {
-    pulsa: {
-        telkomsel: [
-            { buyer_sku_code: 'telkomsel5k', name: 'Pulsa Telkomsel 5.000', priceAgent: 5300, priceSell: 7000, desc: 'Masa aktif 7 hari' },
-            { buyer_sku_code: 'telkomsel10k', name: 'Pulsa Telkomsel 10.000', priceAgent: 10250, priceSell: 12000, desc: 'Masa aktif 15 hari' },
-            { buyer_sku_code: 'telkomsel15k', name: 'Pulsa Telkomsel 15.000', priceAgent: 15150, priceSell: 17000, desc: 'Masa aktif 20 hari' },
-            { buyer_sku_code: 'telkomsel20k', name: 'Pulsa Telkomsel 20.000', priceAgent: 19950, priceSell: 22000, desc: 'Masa aktif 30 hari' },
-            { buyer_sku_code: 'telkomsel25k', name: 'Pulsa Telkomsel 25.000', priceAgent: 24850, priceSell: 27000, desc: 'Masa aktif 30 hari' },
-            { buyer_sku_code: 'telkomsel50k', name: 'Pulsa Telkomsel 50.000', priceAgent: 49100, priceSell: 52000, desc: 'Masa aktif 45 hari' },
-            { buyer_sku_code: 'telkomsel100k', name: 'Pulsa Telkomsel 100.000', priceAgent: 97500, priceSell: 102000, desc: 'Masa aktif 60 hari' },
-        ],
-        indosat: [
-            { buyer_sku_code: 'indosat5k', name: 'Pulsa Indosat 5.000', priceAgent: 5400, priceSell: 7000, desc: 'Masa aktif 7 hari' },
-            { buyer_sku_code: 'indosat10k', name: 'Pulsa Indosat 10.000', priceAgent: 10300, priceSell: 12000, desc: 'Masa aktif 15 hari' },
-            { buyer_sku_code: 'indosat15k', name: 'Pulsa Indosat 15.000', priceAgent: 15200, priceSell: 17000, desc: 'Masa aktif 20 hari' },
-            { buyer_sku_code: 'indosat25k', name: 'Pulsa Indosat 25.000', priceAgent: 24900, priceSell: 27000, desc: 'Masa aktif 30 hari' },
-            { buyer_sku_code: 'indosat50k', name: 'Pulsa Indosat 50.000', priceAgent: 49200, priceSell: 52000, desc: 'Masa aktif 45 hari' },
-            { buyer_sku_code: 'indosat100k', name: 'Pulsa Indosat 100.000', priceAgent: 97800, priceSell: 102000, desc: 'Masa aktif 60 hari' },
-        ],
-        xl: [
-            { buyer_sku_code: 'xl5k', name: 'Pulsa XL 5.000', priceAgent: 5450, priceSell: 7000, desc: 'Masa aktif 7 hari' },
-            { buyer_sku_code: 'xl10k', name: 'Pulsa XL 10.000', priceAgent: 10350, priceSell: 12000, desc: 'Masa aktif 15 hari' },
-            { buyer_sku_code: 'xl15k', name: 'Pulsa XL 15.000', priceAgent: 15250, priceSell: 17000, desc: 'Masa aktif 20 hari' },
-            { buyer_sku_code: 'xl25k', name: 'Pulsa XL 25.000', priceAgent: 24950, priceSell: 27000, desc: 'Masa aktif 30 hari' },
-            { buyer_sku_code: 'xl50k', name: 'Pulsa XL 50.000', priceAgent: 49300, priceSell: 52000, desc: 'Masa aktif 45 hari' },
-            { buyer_sku_code: 'xl100k', name: 'Pulsa XL 100.000', priceAgent: 98000, priceSell: 102000, desc: 'Masa aktif 60 hari' },
-        ],
-        tri: [
-            { buyer_sku_code: 'tri5k', name: 'Pulsa Tri 5.000', priceAgent: 5200, priceSell: 7000, desc: 'Masa aktif 7 hari' },
-            { buyer_sku_code: 'tri10k', name: 'Pulsa Tri 10.000', priceAgent: 10100, priceSell: 12000, desc: 'Masa aktif 15 hari' },
-            { buyer_sku_code: 'tri20k', name: 'Pulsa Tri 20.000', priceAgent: 19800, priceSell: 22000, desc: 'Masa aktif 30 hari' },
-            { buyer_sku_code: 'tri25k', name: 'Pulsa Tri 25.000', priceAgent: 24700, priceSell: 27000, desc: 'Masa aktif 30 hari' },
-            { buyer_sku_code: 'tri50k', name: 'Pulsa Tri 50.000', priceAgent: 49000, priceSell: 52000, desc: 'Masa aktif 45 hari' },
-            { buyer_sku_code: 'tri100k', name: 'Pulsa Tri 100.000', priceAgent: 97200, priceSell: 102000, desc: 'Masa aktif 60 hari' },
-        ],
-        smartfren: [
-            { buyer_sku_code: 'smartfren5k', name: 'Pulsa Smartfren 5.000', priceAgent: 5250, priceSell: 7000, desc: 'Masa aktif 7 hari' },
-            { buyer_sku_code: 'smartfren10k', name: 'Pulsa Smartfren 10.000', priceAgent: 10150, priceSell: 12000, desc: 'Masa aktif 15 hari' },
-            { buyer_sku_code: 'smartfren25k', name: 'Pulsa Smartfren 25.000', priceAgent: 24800, priceSell: 27000, desc: 'Masa aktif 30 hari' },
-            { buyer_sku_code: 'smartfren50k', name: 'Pulsa Smartfren 50.000', priceAgent: 49100, priceSell: 52000, desc: 'Masa aktif 45 hari' },
-            { buyer_sku_code: 'smartfren100k', name: 'Pulsa Smartfren 100.000', priceAgent: 97500, priceSell: 102000, desc: 'Masa aktif 60 hari' },
-        ]
-    },
-    data: {
-        telkomsel: [
-            { buyer_sku_code: 'td1gb', name: 'Internet Max 1 GB', priceAgent: 6500, priceSell: 8500, desc: '1 GB Utama, 3 Hari' },
-            { buyer_sku_code: 'td3gb', name: 'Internet Max 3 GB', priceAgent: 14500, priceSell: 18000, desc: '3 GB Utama, 30 Hari' },
-            { buyer_sku_code: 'td5gb', name: 'Combo Sakti 5 GB', priceAgent: 23500, priceSell: 27000, desc: '5 GB + 30 Mnt Telp, 30 Hari' },
-            { buyer_sku_code: 'td10gb', name: 'Internet OMG! 10 GB', priceAgent: 38200, priceSell: 43000, desc: '10 GB OMG!, 30 Hari' },
-            { buyer_sku_code: 'td15gb', name: 'Combo Sakti 15 GB', priceAgent: 52000, priceSell: 58000, desc: '15 GB + Unlimited Chat, 30 Hari' },
-            { buyer_sku_code: 'td25gb', name: 'Internet OMG! 25 GB', priceAgent: 76500, priceSell: 84000, desc: '25 GB OMG! + 2 GB Nonton, 30 Hari' },
-        ],
-        indosat: [
-            { buyer_sku_code: 'id3gb', name: 'Freedom Internet 3 GB', priceAgent: 14200, priceSell: 17000, desc: '3 GB Utama, 30 Hari' },
-            { buyer_sku_code: 'id5gb', name: 'Freedom Internet 5 GB', priceAgent: 22100, priceSell: 25000, desc: 'Kuota Utama, 30 Hari' },
-            { buyer_sku_code: 'id10gb', name: 'Freedom Internet 10 GB', priceAgent: 35500, priceSell: 40000, desc: '10 GB Utama, 30 Hari' },
-            { buyer_sku_code: 'id20gb', name: 'Freedom Internet 20 GB', priceAgent: 55000, priceSell: 62000, desc: '20 GB Utama, 30 Hari' },
-        ],
-        xl: [
-            { buyer_sku_code: 'xd3gb', name: 'Xtra Combo Flex 3 GB', priceAgent: 15000, priceSell: 18000, desc: 'Flex 3 GB, 30 Hari' },
-            { buyer_sku_code: 'xd5gb', name: 'Xtra Combo Flex 5 GB', priceAgent: 21500, priceSell: 25000, desc: 'Flex 5 GB, 30 Hari' },
-            { buyer_sku_code: 'xd10gb', name: 'Xtra Combo Flex 10 GB', priceAgent: 34800, priceSell: 39000, desc: 'Flex 10 GB, 30 Hari' },
-            { buyer_sku_code: 'xd20gb', name: 'Xtra Combo Flex 20 GB', priceAgent: 58000, priceSell: 65000, desc: 'Flex 20 GB, 30 Hari' },
-        ],
-        tri: [
-            { buyer_sku_code: '3d3gb', name: 'Happy 3 GB', priceAgent: 11200, priceSell: 14000, desc: '3 GB Utama, 30 Hari' },
-            { buyer_sku_code: '3d6gb', name: 'Happy 6 GB', priceAgent: 17500, priceSell: 20000, desc: '6 GB Utama, 30 Hari' },
-            { buyer_sku_code: '3d12gb', name: 'Happy 12 GB', priceAgent: 29500, priceSell: 34000, desc: '12 GB Utama, 30 Hari' },
-            { buyer_sku_code: '3d25gb', name: 'Happy 25 GB', priceAgent: 49000, priceSell: 55000, desc: '25 GB Utama, 30 Hari' },
-        ],
-        smartfren: [
-            { buyer_sku_code: 'sd5gb', name: 'Smartfren Kuota 5 GB', priceAgent: 15500, priceSell: 18000, desc: '5 GB Utama, 28 Hari' },
-            { buyer_sku_code: 'sd10gb', name: 'Smartfren Kuota 10 GB', priceAgent: 27900, priceSell: 32000, desc: '10 GB Utama, 28 Hari' },
-            { buyer_sku_code: 'sd30gb', name: 'Smartfren Unlimited 30 GB', priceAgent: 62000, priceSell: 70000, desc: 'FUP 1 GB/Hari, 30 Hari' },
-        ]
-    },
-    pln: {
-        global: [
-            { buyer_sku_code: 'pln20', name: 'Token PLN 20.000', priceAgent: 20150, priceSell: 22000, desc: 'Estimasi ~13.5 kWh' },
-            { buyer_sku_code: 'pln50', name: 'Token PLN 50.000', priceAgent: 50150, priceSell: 52000, desc: 'Estimasi ~34.0 kWh' },
-            { buyer_sku_code: 'pln100', name: 'Token PLN 100.000', priceAgent: 100150, priceSell: 102000, desc: 'Estimasi ~68.2 kWh' },
-            { buyer_sku_code: 'pln200', name: 'Token PLN 200.000', priceAgent: 200150, priceSell: 203000, desc: 'Estimasi ~136.4 kWh' },
-            { buyer_sku_code: 'pln500', name: 'Token PLN 500.000', priceAgent: 500150, priceSell: 504000, desc: 'Estimasi ~341.0 kWh' },
-        ]
-    },
-    emoney: {
-        gopay: [
-            { buyer_sku_code: 'gopay10', name: 'GoPay Rp 10.000', priceAgent: 10300, priceSell: 12000, desc: 'Saldo GoPay Customer' },
-            { buyer_sku_code: 'gopay20', name: 'GoPay Rp 20.000', priceAgent: 20300, priceSell: 22000, desc: 'Saldo GoPay Customer' },
-            { buyer_sku_code: 'gopay50', name: 'GoPay Rp 50.000', priceAgent: 50300, priceSell: 52500, desc: 'Saldo GoPay Customer' },
-            { buyer_sku_code: 'gopay100', name: 'GoPay Rp 100.000', priceAgent: 100300, priceSell: 102500, desc: 'Saldo GoPay Customer' },
-        ],
-        ovo: [
-            { buyer_sku_code: 'ovo10', name: 'OVO Rp 10.000', priceAgent: 10350, priceSell: 12000, desc: 'Saldo OVO Cash' },
-            { buyer_sku_code: 'ovo20', name: 'OVO Rp 20.000', priceAgent: 20350, priceSell: 22000, desc: 'Saldo OVO Cash' },
-            { buyer_sku_code: 'ovo50', name: 'OVO Rp 50.000', priceAgent: 50350, priceSell: 52500, desc: 'Saldo OVO Cash' },
-            { buyer_sku_code: 'ovo100', name: 'OVO Rp 100.000', priceAgent: 100350, priceSell: 102500, desc: 'Saldo OVO Cash' },
-        ],
-        dana: [
-            { buyer_sku_code: 'dana10', name: 'DANA Rp 10.000', priceAgent: 10200, priceSell: 12000, desc: 'Top Up Saldo DANA' },
-            { buyer_sku_code: 'dana20', name: 'DANA Rp 20.000', priceAgent: 20200, priceSell: 22000, desc: 'Top Up Saldo DANA' },
-            { buyer_sku_code: 'dana50', name: 'DANA Rp 50.000', priceAgent: 50200, priceSell: 52500, desc: 'Top Up Saldo DANA' },
-            { buyer_sku_code: 'dana100', name: 'DANA Rp 100.000', priceAgent: 100200, priceSell: 102500, desc: 'Top Up Saldo DANA' },
-        ],
-        shopeepay: [
-            { buyer_sku_code: 'shopee10', name: 'ShopeePay Rp 10.000', priceAgent: 10300, priceSell: 12000, desc: 'Saldo ShopeePay' },
-            { buyer_sku_code: 'shopee20', name: 'ShopeePay Rp 20.000', priceAgent: 20300, priceSell: 22000, desc: 'Saldo ShopeePay' },
-            { buyer_sku_code: 'shopee50', name: 'ShopeePay Rp 50.000', priceAgent: 50300, priceSell: 52500, desc: 'Saldo ShopeePay' },
-            { buyer_sku_code: 'shopee100', name: 'ShopeePay Rp 100.000', priceAgent: 100300, priceSell: 102500, desc: 'Saldo ShopeePay' },
-        ]
-    },
-    game: {
-        mlbb: [
-            { buyer_sku_code: 'mlbb86', name: 'MLBB 86 Diamonds', priceAgent: 19800, priceSell: 23000, desc: 'Mobile Legends Bang Bang' },
-            { buyer_sku_code: 'mlbb172', name: 'MLBB 172 Diamonds', priceAgent: 39500, priceSell: 44000, desc: 'Mobile Legends Bang Bang' },
-            { buyer_sku_code: 'mlbbpass', name: 'Weekly Diamond Pass', priceAgent: 27500, priceSell: 31000, desc: 'Klaim 210 Diamond / 7 Hari' },
-        ],
-        ff: [
-            { buyer_sku_code: 'ff70', name: 'Free Fire 70 Diamonds', priceAgent: 9300, priceSell: 12000, desc: 'Free Fire Garena' },
-            { buyer_sku_code: 'ff140', name: 'Free Fire 140 Diamonds', priceAgent: 18500, priceSell: 22000, desc: 'Free Fire Garena' },
-            { buyer_sku_code: 'ff355', name: 'Free Fire 355 Diamonds', priceAgent: 46000, priceSell: 51000, desc: 'Free Fire Garena' },
-        ],
-        pubg: [
-            { buyer_sku_code: 'pubg60', name: 'PUBG 60 UC', priceAgent: 14000, priceSell: 17000, desc: 'PUBG Mobile Unknown Cash' },
-            { buyer_sku_code: 'pubg325', name: 'PUBG 325 UC', priceAgent: 69000, priceSell: 76000, desc: 'PUBG Mobile Unknown Cash' },
-        ]
-    },
-    aktif: {
-        telkomsel: [
-            { buyer_sku_code: 'tsel_aktif5', name: 'Telkomsel Masa Aktif 5 Hari', priceAgent: 2000, priceSell: 3500, desc: 'Menambah masa aktif kartu Telkomsel sebanyak 5 hari' },
-            { buyer_sku_code: 'tsel_aktif30', name: 'Telkomsel Masa Aktif 30 Hari', priceAgent: 12000, priceSell: 15000, desc: 'Menambah masa aktif kartu Telkomsel sebanyak 30 hari' },
-        ],
-        xl: [
-            { buyer_sku_code: 'xl_aktif30', name: 'XL Masa Aktif 30 Hari', priceAgent: 10000, priceSell: 13000, desc: 'Menambah masa aktif kartu XL Axiata sebanyak 30 hari' },
-        ],
-        indosat: [],
-        tri: [],
-        smartfren: []
-    },
-    tv: {
-        kvision: [
-            { buyer_sku_code: 'kvision50', name: 'K-Vision Rp 50.000', priceAgent: 48500, priceSell: 51000, desc: 'Voucher Fisik / Elektrik K-Vision' },
-            { buyer_sku_code: 'kvision100', name: 'K-Vision Rp 100.000', priceAgent: 97000, priceSell: 101000, desc: 'Voucher Fisik / Elektrik K-Vision' },
-        ],
-        nexparabola: [
-            { buyer_sku_code: 'nex50', name: 'Nex Parabola Rp 50.000', priceAgent: 49000, priceSell: 51500, desc: 'Paket Nex Parabola' },
-            { buyer_sku_code: 'nex100', name: 'Nex Parabola Rp 100.000', priceAgent: 98000, priceSell: 102000, desc: 'Paket Nex Parabola' },
-        ]
-    }
-};
-
-// Helper to calculate MD5 (for Digiflazz)
+// Helper to calculate MD5
 function calculateMD5(string) {
     return crypto.createHash('md5').update(string).digest('hex');
 }
@@ -474,6 +303,15 @@ app.use('/api/deposits', depositRoutes);
 const transactionRoutes = createTransactionRoutes({
     Transaction,
     User,
+    Voucher,
+    sequelize,
+    findProductBySku,
+    isDigiflazzMock,
+    DIGIFLAZZ_USERNAME,
+    DIGIFLAZZ_API_KEY,
+    DIGIFLAZZ_BASE_URL,
+    calculateMD5,
+    axios,
     authenticateToken,
     authenticateAdmin,
     handleFailedTransactionRefund
