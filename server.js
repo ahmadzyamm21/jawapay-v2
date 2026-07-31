@@ -318,6 +318,21 @@ const transactionRoutes = createTransactionRoutes({
 });
 app.use('/api', transactionRoutes);
 
+// Register webhook routes (uses webhookService)
+const createWebhookRoutes = require('./routes/webhook');
+const createWebhookService = require('./services/webhookService');
+const webhookService = createWebhookService({
+    sequelize,
+    Transaction,
+    User,
+    handleFailedTransactionRefund,
+    Deposit,
+    Voucher,
+    axios
+});
+const webhookRoutes = createWebhookRoutes({ webhookService });
+app.use('/api', webhookRoutes);
+
 // ==========================================
 //             ADMIN API ENDPOINTS
 // ==========================================
