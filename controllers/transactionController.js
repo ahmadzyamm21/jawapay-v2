@@ -1,3 +1,5 @@
+const createTransactionService = require('../services/transactionService');
+
 function createTransactionController({
     Transaction,
     User,
@@ -11,16 +13,11 @@ function createTransactionController({
         throw new Error('Transaction controller membutuhkan handleFailedTransactionRefund.');
     }
 
+    const transactionService = createTransactionService({ Transaction, User });
+
     async function getAdminTransactions(req, res) {
         try {
-            const transactions = await Transaction.findAll({
-                include: [{
-                    model: User,
-                    as: 'user',
-                    attributes: ['username', 'name']
-                }],
-                order: [['createdAt', 'DESC']]
-            });
+            const transactions = await transactionService.findAllAdminTransactions();
 
             return res.json({ success: true, transactions });
         } catch (err) {
@@ -40,7 +37,7 @@ function createTransactionController({
         }
 
         try {
-            const trx = await Transaction.findByPk(trxId);
+            const trx = await transactionService.findByPk(trxId);
             if (!trx) {
                 return res.status(404).json({
                     error: 'Transaksi tidak ditemukan.'
@@ -56,7 +53,7 @@ function createTransactionController({
             }
 
             trx.status = status;
-            await trx.save();
+            await transactionService.save(trx);
 
             if (status === 'Gagal' && oldStatus !== 'Gagal') {
                 await handleFailedTransactionRefund(trx, oldStatus);
@@ -77,14 +74,12 @@ function createTransactionController({
     async function syncPendingTransactions(req, res) {
         try {
             const userId = req.user.id;
-            const pendingTrxs = await Transaction.findAll({
-                where: { userId, status: 'Pending' }
-            });
+            const pendingTrxs = await transactionService.findPendingByUser(userId);
 
             let updatedCount = 0;
             for (const trx of pendingTrxs) {
                 trx.status = 'Sukses';
-                await trx.save();
+                await transactionService.save(trx);
                 updatedCount += 1;
             }
 
