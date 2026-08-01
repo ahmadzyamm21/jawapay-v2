@@ -5,10 +5,10 @@ function createDashboardController({ dashboardService }) {
         adminSummary: async (req, res) => {
             try {
                 const summary = await dashboardService.getAdminSummary();
-                res.json(summary);
+                return res.json(summary);
             } catch (err) {
                 console.error('Fetch admin summary error:', err);
-                res.status(500).json({ error: 'Gagal memuat ringkasan admin.' });
+                return res.status(500).json({ success: false, message: 'Gagal memuat ringkasan admin.' });
             }
         },
 
@@ -16,33 +16,33 @@ function createDashboardController({ dashboardService }) {
             try {
                 const userId = req.user.id;
                 const analytics = await dashboardService.getEarningsAnalytics(userId);
-                res.json(analytics);
+                return res.json(analytics);
             } catch (err) {
                 console.error('Fetch earnings analytics error:', err);
-                res.status(500).json({ error: 'Gagal memuat analitik keuntungan.' });
+                return res.status(500).json({ success: false, message: 'Gagal memuat analitik keuntungan.' });
             }
         },
 
         balance: async (req, res) => {
             try {
                 const balance = await dashboardService.getUserBalance(req.user.id);
-                res.json({ balance });
+                return res.json({ success: true, balance });
             } catch (err) {
                 console.error('Fetch balance error:', err);
                 if (err.status === 404) {
-                    return res.status(404).json({ error: err.message });
+                    return res.status(404).json({ success: false, message: err.message });
                 }
-                res.status(500).json({ error: 'Gagal memuat saldo.' });
+                return res.status(500).json({ success: false, message: 'Gagal memuat saldo.' });
             }
         },
 
         digiflazzDepositBalance: async (req, res) => {
             try {
                 const depositData = await dashboardService.getDigiflazzDepositBalance();
-                res.json(depositData);
+                return res.json({ success: true, ...depositData });
             } catch (err) {
                 console.error('Error checking Digiflazz deposit balance:', err);
-                res.status(500).json({ error: 'Gagal mengecek saldo deposit Digiflazz.' });
+                return res.status(500).json({ success: false, message: 'Gagal mengecek saldo deposit Digiflazz.' });
             }
         }
     };
