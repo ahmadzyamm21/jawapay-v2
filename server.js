@@ -319,6 +319,22 @@ const transactionRoutes = createTransactionRoutes({
 });
 app.use('/api', transactionRoutes);
 
+const createDashboardRoutes = require('./routes/dashboard');
+const createDashboardService = require('./services/dashboardService');
+const dashboardService = createDashboardService({
+    axios,
+    calculateMD5,
+    DIGIFLAZZ_USERNAME,
+    DIGIFLAZZ_API_KEY,
+    DIGIFLAZZ_BASE_URL
+});
+const dashboardRoutes = createDashboardRoutes({
+    dashboardService,
+    authenticateToken,
+    authenticateAdmin
+});
+app.use('/api', dashboardRoutes);
+
 // Register webhook routes (uses webhookService)
 const createWebhookRoutes = require('./routes/webhook');
 const createWebhookService = require('./services/webhookService');
@@ -344,48 +360,6 @@ app.use('/api', webhookRoutes);
 // ==========================================
 //             ADMIN API ENDPOINTS
 // ==========================================
-
-// Get summary stats (total balance, total agents, Digiflazz balance)
-app.get('/api/admin/summary', authenticateAdmin, async (req, res) => {
-    try {
-        const totalUsers = await User.count({ where: { role: 'agent' } });
-        const totalBalance = await User.sum('balance', { where: { role: 'agent' } }) || 0;
-        
-        const successTrxs = await Transaction.count({ where: { status: 'Sukses' } });
-        const pendingTrxs = await Transaction.count({ where: { status: 'Pending' } });
-        const failedTrxs = await Transaction.count({ where: { status: 'Gagal' } });
-
-        let digiflazzBalance = 0;
-        try {
-            const sign = calculateMD5(DIGIFLAZZ_USERNAME + DIGIFLAZZ_API_KEY + 'depo');
-            const dfRes = await axios.post(`${DIGIFLAZZ_BASE_URL}/cek-saldo`, {
-                cmd: 'deposit',
-                username: DIGIFLAZZ_USERNAME,
-                sign: sign
-            });
-            if (dfRes.data && dfRes.data.data) {
-                digiflazzBalance = dfRes.data.data.deposit || 0;
-            }
-        } catch (dfErr) {
-            console.error('[Admin Summary] Gagal cek saldo Digiflazz:', dfErr.message);
-        }
-
-        res.json({
-            success: true,
-            summary: {
-                totalUsers,
-                totalBalance,
-                successTrxs,
-                pendingTrxs,
-                failedTrxs,
-                digiflazzBalance
-            }
-        });
-    } catch (err) {
-        console.error('Admin summary error:', err);
-        res.status(500).json({ error: 'Gagal memuat ringkasan admin.' });
-    }
-});
 
 // Get all agents (users)
 app.get('/api/admin/users', authenticateAdmin, async (req, res) => {
@@ -1091,102 +1065,6 @@ app.post('/api/downlines/register', authenticateToken, async (req, res) => {
     }
 });
 
-// Get earnings analytics summary and chart data
-app.get('/api/analytics/earnings', authenticateToken, async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const { Op } = db.Sequelize;
-        
-        const now = new Date();
-        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-        const sevenDaysAgo = new Date(startOfToday.getTime() - 6 * 24 * 60 * 60 * 1000);
-        
-        // 1. Today's Profit
-        const todayProfit = await Transaction.sum('profit', {
-            where: {
-                userId,
-                status: 'Sukses',
-                createdAt: { [Op.gte]: startOfToday }
-            }
-        }) || 0;
-
-        // 2. This Month's Profit
-        const monthProfit = await Transaction.sum('profit', {
-            where: {
-                userId,
-                status: 'Sukses',
-                createdAt: { [Op.gte]: startOfMonth }
-            }
-        }) || 0;
-
-        // 3. Commission Profit from Downlines
-        const commissionProfit = await Transaction.sum('profit', {
-            where: {
-                userId,
-                status: 'Sukses',
-                category: 'komisi'
-            }
-        }) || 0;
-
-        // 4. Direct Sales Profit (where category is not 'komisi')
-        const salesProfit = await Transaction.sum('profit', {
-            where: {
-                userId,
-                status: 'Sukses',
-                category: { [Op.ne]: 'komisi' }
-            }
-        }) || 0;
-
-        // 5. Daily Profit for Last 7 Days (for Chart)
-        const last7DaysTrxs = await Transaction.findAll({
-            where: {
-                userId,
-                status: 'Sukses',
-                createdAt: { [Op.gte]: sevenDaysAgo }
-            },
-            attributes: ['profit', 'createdAt']
-        });
-
-        // Initialize last 7 days map
-        const dailyProfitMap = {};
-        for (let i = 0; i < 7; i++) {
-            const d = new Date(startOfToday.getTime() - i * 24 * 60 * 60 * 1000);
-            const dateStr = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
-            dailyProfitMap[dateStr] = 0;
-        }
-
-        // Aggregate daily profits
-        last7DaysTrxs.forEach(trx => {
-            const dateStr = new Date(trx.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
-            if (dailyProfitMap[dateStr] !== undefined) {
-                dailyProfitMap[dateStr] += trx.profit;
-            }
-        });
-
-        const labels = Object.keys(dailyProfitMap).reverse();
-        const data = Object.values(dailyProfitMap).reverse();
-
-        res.json({
-            success: true,
-            summary: {
-                today: todayProfit,
-                month: monthProfit,
-                commission: commissionProfit,
-                sales: salesProfit,
-                total: commissionProfit + salesProfit
-            },
-            chart: {
-                labels,
-                data
-            }
-        });
-    } catch (err) {
-        console.error('Fetch earnings analytics error:', err);
-        res.status(500).json({ error: 'Gagal memuat analitik keuntungan.' });
-    }
-});
-
 // Get Product List (Prepaid Price List from Digiflazz) with Referral Markup applied dynamically
 app.get('/api/products', async (req, res) => {
     try {
@@ -1272,37 +1150,6 @@ app.get('/api/diagnostics/catalog', (req, res) => {
         apiKeyPrefix: DIGIFLAZZ_API_KEY ? DIGIFLAZZ_API_KEY.substring(0, 6) + '***' : '(empty)',
         catalog: summary
     });
-});
-
-// Get Balance (Protected)
-app.post('/api/balance', authenticateToken, async (req, res) => {
-    try {
-        const user = await User.findByPk(req.user.id);
-        if (!user) return res.status(404).json({ error: 'User tidak ditemukan.' });
-        res.json({ balance: user.balance });
-    } catch (err) {
-        res.status(500).json({ error: 'Gagal memuat saldo.' });
-    }
-});
-
-// Check Real H2H Digiflazz Supplier Deposit Balance (Protected Admin Only)
-app.get('/api/digiflazz/deposit-balance', authenticateAdmin, async (req, res) => {
-    try {
-        if (!DIGIFLAZZ_USERNAME || !DIGIFLAZZ_API_KEY) {
-            return res.json({ deposit: 0, mode: 'Mock Mode' });
-        }
-        const sign = calculateMD5(DIGIFLAZZ_USERNAME + DIGIFLAZZ_API_KEY + 'depo');
-        const response = await axios.post(`${DIGIFLAZZ_BASE_URL}/cek-saldo`, {
-            cmd: 'deposit',
-            username: DIGIFLAZZ_USERNAME,
-            sign: sign
-        });
-        const deposit = (response.data && response.data.data) ? response.data.data.deposit : 0;
-        res.json({ deposit: deposit, username: DIGIFLAZZ_USERNAME });
-    } catch (err) {
-        console.error('Error checking Digiflazz deposit balance:', err.message);
-        res.status(500).json({ error: 'Gagal mengecek saldo deposit Digiflazz.' });
-    }
 });
 
 // Process Direct Agent Wallet Transaction (Protected with SQL Managed Transaction)
